@@ -9,6 +9,7 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant        GM_setClipboard
 // @grant        GM_addStyle
+// @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_post_link.user.js
 // ==/UserScript==
 
 (function() {
