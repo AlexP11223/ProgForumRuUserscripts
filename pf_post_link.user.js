@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumPostLink
 // @namespace    http://programmersforum.ru/
-// @version      0.1
+// @version      0.2
 // @description  adds button to copy post url
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -15,6 +15,8 @@
 (function() {
     'use strict';
 
+    GM_addStyle('.link-popup { font-weight: bold; margin-right: 8px; }');
+
     $.each($('[id^="postcount"]'), function(i, oldPostLink) {
         var id = $(oldPostLink).attr('id').replace('postcount', '');
         var href = '#post' + id;
@@ -25,6 +27,10 @@
             var url = window.location.href.split("#")[0];
 
             GM_setClipboard(url + href);
+
+            var popup = $('<span class="link-popup" style="display: none;">ссылка скопирована в буфер обмена</span>').prependTo(container);
+            popup.fadeIn();
+            popup.delay(2500).fadeOut();
         });
     });
 })();
