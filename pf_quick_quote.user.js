@@ -80,7 +80,7 @@
         'cursor: pointer;' +
         'background-color: lightyellow; }');
 
-    $('<div id="quick_quote_btn" class="qq-btn" style="display:none;">Цитировать</div>').prependTo($('body'));
+    $('<div id="quick_quote_btn" class="smallfont qq-btn" style="display:none;">Цитировать</div>').prependTo($('body'));
 
     var qqBtn = $('#quick_quote_btn');
 
