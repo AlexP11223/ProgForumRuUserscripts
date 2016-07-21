@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumQuickQuote
 // @namespace    http://programmersforum.ru/
-// @version      0.1
+// @version      0.2
 // @description  adds a button to quote selected text, also changes the reply/quote button to not reload page
 // @author       Alex P
 // @include      http://programmersforum.ru/*
