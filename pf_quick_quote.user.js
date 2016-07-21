@@ -1,18 +1,28 @@
 // ==UserScript==
 // @name         ProgrammersForumQuickQuote
 // @namespace    http://programmersforum.ru/
-// @version      0.2
+// @version      0.3
 // @description  adds a button to quote selected text, also changes the reply/quote button to not reload page
 // @author       Alex P
 // @include      http://programmersforum.ru/*
 // @include      http://www.programmersforum.ru/*
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
-// @grant        GM_addStyle
+// @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_quick_quote.user.js
 // ==/UserScript==
 
+// @grant must be none, otherwise cannot access vB_Editor in Firefox
+
 (function() {
     'use strict';
+
+    function addStyle(css) {
+        var head = document.getElementsByTagName('head')[0];
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = css;
+        head.appendChild(style);
+    }
 
     function getSelectedText() {
         return window.getSelection().toString();
@@ -72,7 +82,7 @@
         });
     }
 
-    GM_addStyle('.qq-btn { z-index: 999;' +
+    addStyle('.qq-btn { z-index: 999;' +
         'position: absolute;' +
         'border: 1px solid midnightblue;' +
         'padding: 3px;' +
