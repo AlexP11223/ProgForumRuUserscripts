@@ -60,7 +60,11 @@
     }
 
     function appendQuote(text) {
-        appendText('[QUOTE=' + currAuthorName + ';' + currPostId + ']' + text + '[/QUOTE]\n');
+        var nameQuoteChar = '';
+        if (currAuthorName.indexOf(']') !== -1)
+            nameQuoteChar = "'";
+
+        appendText('[QUOTE=' + nameQuoteChar + currAuthorName + ';' + currPostId + nameQuoteChar + ']' + text + '[/QUOTE]\n');
     }
 
     function quoteSelected() {
