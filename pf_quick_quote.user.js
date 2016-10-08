@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumQuickQuote
 // @namespace    http://programmersforum.ru/
-// @version      0.6
+// @version      0.61
 // @description  adds a button to quote selected text, also changes the reply/quote button to not reload page
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -15,6 +15,10 @@
 
 (function() {
     'use strict';
+
+    if (window.quickQuoteInitialized || $('#quick_quote_btn').length)
+        return;
+    window.quickQuoteInitialized = true;
 
     function addStyle(css) {
         var head = document.getElementsByTagName('head')[0];

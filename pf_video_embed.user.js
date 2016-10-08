@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumVideoEmbed
 // @namespace    http://programmersforum.ru/
-// @version      0.3
+// @version      0.31
 // @description  replaces youtube and coub links with embedded video player frames
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -13,6 +13,10 @@
 
 (function() {
     'use strict';
+
+    if (window.videoEmbedInitialized)
+        return;
+    window.videoEmbedInitialized = true;
 
     var YOUTUBE_EMBED_TEMPLATE = '<iframe src="https://www.youtube.com/embed/_ID_" width="560" height="315" frameborder="0" allowfullscreen></iframe>';
     var COUB_EMBED_TEMPLATE = '<iframe src="//coub.com/embed/_ID_?muted=false&autostart=false&originalSize=false&startWithHD=true" width="640" height="270" frameborder="0" allowfullscreen></iframe>';

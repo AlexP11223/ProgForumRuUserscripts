@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumPostLink
 // @namespace    http://programmersforum.ru/
-// @version      0.2
+// @version      0.21
 // @description  adds button to copy post url
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -14,6 +14,10 @@
 
 (function() {
     'use strict';
+
+    if (window.postLinkInitialized)
+        return;
+    window.postLinkInitialized = true;
 
     GM_addStyle('.link-popup { font-weight: bold; margin-right: 8px; }');
 
