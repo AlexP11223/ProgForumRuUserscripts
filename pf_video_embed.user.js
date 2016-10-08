@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumVideoEmbed
 // @namespace    http://programmersforum.ru/
-// @version      0.21
+// @version      0.3
 // @description  replaces youtube and coub links with embedded video player frames
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -24,23 +24,96 @@
         origLinkNode.hide();
     }
 
+    function parseURL(url) {
+        var parser = document.createElement('a');
+        var searchDict = {};
+
+        parser.href = url;
+
+        var queries = parser.search.replace(/^\?/, '').split('&');
+        var i;
+        for (i = 0; i < queries.length; i++) {
+            var parts = queries[i].split('=');
+            searchDict[parts[0]] = parts[1];
+        }
+
+        return {
+            protocol: parser.protocol,
+            host: parser.host,
+            hostname: parser.hostname,
+            port: parser.port,
+            pathname: parser.pathname,
+            search: parser.search,
+            hash: parser.hash,
+            searchDict: searchDict,
+            pathParts: parser.pathname.substring(1).split('/')
+        };
+    }
+
+    function containsAny(str, substrings) {
+        for (var i = 0; i != substrings.length; i++) {
+            var substring = substrings[i];
+            if (str.indexOf(substring) != -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function parseYoutubeId(href) {
+        var url = parseURL(href);
+
+        var domains = ['youtube.com', 'youtu.be'];
+
+        if (!containsAny(url.hostname, domains))
+            return false;
+
+        if (url.hostname.indexOf('youtu.be') != -1)
+            return url.pathParts[0];
+
+        if (url.searchDict['v'])
+            return url.searchDict['v'];
+
+        if (['watch', 'embed', 'v'].indexOf(url.pathParts[0]) != -1)
+            return url.pathParts[1];
+
+        return false;
+    }
+
+    function parseCoubId(href) {
+        var url = parseURL(href);
+
+        var domains = ['coub.com'];
+
+        if (!containsAny(url.hostname, domains))
+            return false;
+
+        if (['view', 'embed'].indexOf(url.pathParts[0]) != -1)
+            return url.pathParts[1];
+
+        return false;
+    }
+
     var postBlocks = $('#posts, #post, td.alt1:has(hr)');
 
-    $.each(postBlocks.find('a[href*="youtu"], a[href*="coub"]'), function(i, link) {
+    $.each(postBlocks.find('a[href*="youtu"], a[href*="coub"]'), function (i, link) {
+        if (!$(link).is(':visible'))
+            return;
+
         // skip signature
         if ($(link).parents('div').eq(0).is(':contains("__________________")'))
             return;
 
         var url = $(link).attr('href');
 
-        var youtubeIdMatch = url.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
-        if(youtubeIdMatch && youtubeIdMatch[1].indexOf('/') == -1) { // quick fix, should improve youtube detection, for example like here https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/b0190f3e2ab0887ced5529353394cb43553a113f/lib/modules/hosts/youtube.js#L8
-            insertEmbed($(link), YOUTUBE_EMBED_TEMPLATE, youtubeIdMatch[1]);
+        var youtubeId = parseYoutubeId(url);
+        if (youtubeId) {
+            insertEmbed($(link), YOUTUBE_EMBED_TEMPLATE, youtubeId);
         }
 
-        var coubIdMatch = url.match(/(?:http|https)?:\/\/(?:www\.)?coub\.com\/view\/([a-zA-Z\d]+)/);
-        if(coubIdMatch) {
-            insertEmbed($(link), COUB_EMBED_TEMPLATE, coubIdMatch[1]);
+        var coubId = parseCoubId(url);
+        if (coubId) {
+            insertEmbed($(link), COUB_EMBED_TEMPLATE, coubId);
         }
     });
 })();
