@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumVideoEmbed
 // @namespace    http://programmersforum.ru/
-// @version      0.5
+// @version      0.51
 // @description  replaces youtube and coub links with embedded video player frames
 // @author       Alex P
 // @include      http://programmersforum.ru/*
