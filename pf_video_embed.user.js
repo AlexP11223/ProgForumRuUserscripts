@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumVideoEmbed
 // @namespace    http://programmersforum.ru/
-// @version      0.4
+// @version      0.5
 // @description  replaces youtube and coub links with embedded video player frames
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -64,7 +64,37 @@
         return false;
     }
 
-    function parseYoutubeId(href) {
+    function parseYoutube(href) {
+        function parseId(url) {
+            if (url.hostname.indexOf('youtu.be') != -1)
+                return url.pathParts[0];
+
+            if (url.searchDict['v'])
+                return url.searchDict['v'];
+
+            if (['watch', 'embed', 'v'].indexOf(url.pathParts[0]) != -1)
+                return url.pathParts[1];
+
+            return false;
+        }
+
+        function parseTime(s) {
+            try {
+                var parts = s.replace(/[^0-9]+/g, ' ').split(' ');
+                parts = $.grep(parts, function(el) { return el !== '';});
+
+                if (parts.length === 1) {
+                    return parseInt(parts[0], 10);
+                } else if (parts.length === 2) {
+                    return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+                } else if (parts.length === 3) {
+                    return parseInt(parts[0], 10) * 3600 + parseInt(parts[1], 10) * 60 + parseInt(parts[2], 10);
+                }
+            } catch (e) {
+            }
+            return 0;
+        }
+
         var url = parseURL(href);
 
         var domains = ['youtube.com', 'youtu.be'];
@@ -72,14 +102,20 @@
         if (!containsAny(url.hostname, domains))
             return false;
 
-        if (url.hostname.indexOf('youtu.be') != -1)
-            return url.pathParts[0];
+        var id = parseId(url);
 
-        if (url.searchDict['v'])
-            return url.searchDict['v'];
+        if (id) {
+            var ret = { id: id, params: { } };
 
-        if (['watch', 'embed', 'v'].indexOf(url.pathParts[0]) != -1)
-            return url.pathParts[1];
+            if (url.searchDict['t']) {
+                var t = parseTime(url.searchDict['t']);
+                if (t) {
+                    ret.params.start = t;
+                }
+            }
+
+            return ret;
+        }
 
         return false;
     }
@@ -110,9 +146,13 @@
 
         var url = $(link).attr('href');
 
-        var youtubeId = parseYoutubeId(url);
-        if (youtubeId) {
-            insertEmbed($(link), YOUTUBE_EMBED_TEMPLATE, youtubeId);
+        var youtube = parseYoutube(url);
+        if (youtube) {
+            var paramsStr = '';
+            if (!$.isEmptyObject(youtube.params)) {
+                paramsStr = '?' + $.param(youtube.params);
+            }
+            insertEmbed($(link), YOUTUBE_EMBED_TEMPLATE, youtube.id + paramsStr);
         }
 
         var coubId = parseCoubId(url);
