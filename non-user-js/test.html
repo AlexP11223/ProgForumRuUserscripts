@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PF tests</title>
+</head>
+<body>
+
+<div id="result"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="video_embed.js"></script>
+
+<script>
+    (function() {
+        function assert(expected, actual, msg) {
+            if (expected !== actual) {
+                throw new Error(msg ? msg : 'Assertion failed: ' + actual + ' !== ' + expected)
+            }
+        }
+
+        function testYoutubeParsing() {
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://www.youtube.com/watch?v=GJIQs-wT8QC').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://www.youtube.com/watch?v=GJIQs-wT8QC&s=89#123').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('http://www.youtube.com/watch?v=GJIQs-wT8QC').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://youtube.com/watch?v=GJIQs-wT8QC').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://youtube.com/watch/GJIQs-wT8QC?s=89#123').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://youtube.com/v/GJIQs-wT8QC').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://youtube.com/embed/GJIQs-wT8QC').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://youtu.be/GJIQs-wT8QC').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('http://youtu.be/GJIQs-wT8QC?s=89#123').id);
+            assert('GJIQs-wT8QC', videoembed.parseYoutube('https://youtu.be/GJIQs-wT8QC/888').id);
+
+            assert(62, videoembed.parseYoutube('https://www.youtube.com/watch?v=GJIQs-wT8QC&t=1m2s').params.start);
+            assert(3738, videoembed.parseYoutube('https://youtu.be/GJIQs-wT8QC?t=1h2m18s').params.start);
+            assert(498, videoembed.parseYoutube('https://youtu.be/GJIQs-wT8QC?t=8m18s').params.start);
+            assert(8, videoembed.parseYoutube('https://youtu.be/GJIQs-wT8QC?t=8s').params.start);
+            assert(125, videoembed.parseYoutube('https://youtu.be/GJIQs-wT8QC?t=125').params.start);
+
+            assert(false, videoembed.parseYoutube('https://www.ya.ru/watch?v=GJIQs-wT8QC'));
+            assert(false, videoembed.parseYoutube('https://www.youtube.com/channel/UCM0eZccvLPlFDcxBVhTQ'));
+            assert(false, videoembed.parseYoutube('https://www.youtube.com/'));
+            assert(false, videoembed.parseYoutube('qwe'));
+            assert(false, videoembed.parseYoutube(''));
+        }
+
+        function testCoubParsing() {
+            assert('2xo63', videoembed.parseCoubId('http://coub.com/view/2xo63'));
+            assert('2xo63', videoembed.parseCoubId('https://coub.com/view/2xo63'));
+            assert('2xo63', videoembed.parseCoubId('http://coub.com/embed/2xo63'));
+            assert('2xo63', videoembed.parseCoubId('http://coub.com/view/2xo63?s=86#123'));
+            assert('2xo63.gifv', videoembed.parseCoubId('http://coub.com/view/2xo63.gifv'));
+
+            assert(false, videoembed.parseCoubId('http://ya.ru/view/2xo63'));
+            assert(false, videoembed.parseCoubId('http://coub.com/'));
+            assert(false, videoembed.parseCoubId('http://coub.com/123/456'));
+            assert(false, videoembed.parseCoubId('qwe'));
+            assert(false, videoembed.parseCoubId(''));
+        }
+
+        var result = window.document.getElementById('result');
+
+        try {
+            testYoutubeParsing();
+            testCoubParsing();
+
+            result.innerHTML = 'ok';
+        } catch (e) {
+            result.innerHTML = '<p style="color: red;">' + e.message + '</p><pre>' + e.stack + '</pre>';
+            throw e;
+        }
+    })();
+</script>
+
+</body>
+</html>

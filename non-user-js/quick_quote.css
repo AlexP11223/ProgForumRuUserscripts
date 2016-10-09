@@ -1,0 +1,9 @@
+.qq-btn {
+    z-index: 999;
+    position: absolute;
+    border: 1px solid midnightblue;
+    padding: 3px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: lightyellow;
+}
