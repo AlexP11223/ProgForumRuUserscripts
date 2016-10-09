@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumVideoEmbed
 // @namespace    http://programmersforum.ru/
-// @version      0.31
+// @version      0.4
 // @description  replaces youtube and coub links with embedded video player frames
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -24,8 +24,8 @@
     function insertEmbed(origLinkNode, embedTemplate, id) {
         var html = '<br/>' + embedTemplate.replace('_ID_', id) + '<br/>';
 
-        $(html).insertBefore(origLinkNode);
-        origLinkNode.hide();
+        $(html).insertAfter(origLinkNode);
+        origLinkNode.addClass('_embedded');
     }
 
     function parseURL(url) {
@@ -101,7 +101,7 @@
     var postBlocks = $('#posts, #post, td.alt1:has(hr)');
 
     $.each(postBlocks.find('a[href*="youtu"], a[href*="coub"]'), function (i, link) {
-        if (!$(link).is(':visible'))
+        if (!$(link).is(':visible') || $(link).is('._embedded'))
             return;
 
         // skip signature
