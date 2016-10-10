@@ -17,7 +17,8 @@ var quickquote = new function() {
 
     function onPostClicked(e) {
         var selectedText = $.trim(getSelectedText());
-        if (selectedText) {
+        var targetTag = e.target.nodeName.toLowerCase();
+        if (selectedText && targetTag !== 'textarea' && targetTag !== 'input') {
             stopFadeOut();
 
             qqBtn.css({ top: (e.pageY + 10) + 'px', left: e.pageX + 'px'});
