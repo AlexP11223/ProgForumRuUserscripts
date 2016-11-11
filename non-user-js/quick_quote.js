@@ -93,6 +93,13 @@ var quickquote = new function() {
     }
 
     function doInit(options) {
+        try {
+            if (vB_Editor[QR_EditorID]) { }
+        } catch (e) {
+            // not logged in
+            return;
+        }
+
         if (options.selection) {
             $('<div id="' + qqBtnId + '" class="smallfont qq-btn" style="display:none;">Цитировать</div>').prependTo($('body'));
 
@@ -132,13 +139,6 @@ var quickquote = new function() {
             options = defaultOptions;
         } else {
             options = $.extend(defaultOptions, options);
-        }
-
-        try {
-            if (vB_Editor[QR_EditorID]) { }
-        } catch (e) {
-            // not logged in
-            return;
         }
 
         if (window.quickQuoteInitialized || $(qqBtnSelector).length)
