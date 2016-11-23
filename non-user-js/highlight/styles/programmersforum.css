@@ -1,6 +1,6 @@
 /*
 
-programmersforum styling (c) Alar - http://web-satellite.ru/
+programmersforum styling (c) Alar - http://web-satellite.hljs-ru/
 
 */
 
@@ -11,65 +11,64 @@ pre code {
     background: #EBE7DE;
 }
 
-.subst, .title {
+.hljs-subst, .hljs-title {
     font-weight: normal;
     color: #000;
 }
 
-.comment, .template_comment, .javadoc, .diff .header {
+.hljs-comment, .hljs-template_comment, .hljs-javadoc, .hljs-diff .hljs-header {
     color: #808080;
     font-style: italic;
 }
 
-.annotation, .decorator, .preprocessor, .doctype, .pi, .chunk, .shebang {
+.hljs-annotation, .hljs-decorator, .hljs-preprocessor, .hljs-doctype, .hljs-pi, .hljs-chunk, .hljs-shebang {
     color: #0051D6;
 }
 
-.tag, .pi {
-    background: #EBE7DE;
-}
-
-.tag .title, .id, .attr_selector, .literal, .keyword, .hexcolor, .css .function, .ini .title, .css .class, .list .title {
+.hljs-tag .hljs-title, .hljs-id, .hljs-attr_selector, .hljs-literal, .hljs-keyword, .hljs-hexcolor, .hljs-css .hljs-function, .hljs-ini .hljs-title, .hljs-css .hljs-class, .hljs-list .hljs-title, .hljs-tag .hljs-name {
     font-weight: bold;
     color: #010101;
 }
 
-.attribute, .rules .keyword, .number, .regexp {
+.hljs-attribute, .hljs-rules .hljs-keyword, .hljs-number, .hljs-regexp, .hljs-tag .hljs-attr {
     font-weight: bold;
     color: #3000FF;
 }
 
-.number, .regexp {
+.hljs-attr {
+    font-weight: bold;
+}
+
+.hljs-number, .hljs-regexp {
     font-weight: normal;
 }
 
-.string, .value, .filter .argument, .css .function .params {
+.hljs-string, .hljs-value, .hljs-filter .hljs-argument, .hljs-css .hljs-function .hljs-params {
     color: #008000;
     font-weight: bold;
 }
 
-.symbol, .char {
+.hljs-symbol, .hljs-char {
     color: #000;
-    background: #d0eded;
     font-style: italic;
 }
 
-.phpdoc, .javadoctag {
+.hljs-phpdoc, .hljs-javadoctag {
     text-decoration: underline;
 }
 
-.variable, .envvar {
+.hljs-variable, .hljs-envvar {
     color: #660e7a;
 }
 
-.addition {
+.hljs-addition {
     background: #baeeba;
 }
 
-.deletion {
+.hljs-deletion {
     background: #ffc8bd;
 }
 
-.diff .change {
+.hljs-diff .hljs-change {
     background: #bccff9;
 }
