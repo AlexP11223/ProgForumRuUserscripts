@@ -21,7 +21,7 @@ pre code {
     font-style: italic;
 }
 
-.hljs-annotation, .hljs-decorator, .hljs-preprocessor, .hljs-doctype, .hljs-pi, .hljs-chunk, .hljs-shebang {
+.hljs-annotation, .hljs-decorator, .hljs-preprocessor, .hljs-doctype, .hljs-pi, .hljs-chunk, .hljs-shebang, .hljs-meta {
     color: #0051D6;
 }
 
