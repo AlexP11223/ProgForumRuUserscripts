@@ -4,11 +4,16 @@ programmersforum styling (c) Alar - http://web-satellite.hljs-ru/
 
 */
 
-pre code {
+pre code, .hljs {
     font: 12px monospace;
     display: block;
     color: #111;
     background: #EBE7DE;
+    overflow: auto;
+}
+
+pre code {
+    width: 800px;
 }
 
 .hljs-subst, .hljs-title {
