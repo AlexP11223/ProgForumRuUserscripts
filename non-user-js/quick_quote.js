@@ -62,12 +62,22 @@ var quickquote = new function() {
         }
     }
 
+    function scrollIntoMiddle(element) {
+        var elementRect = element.getBoundingClientRect();
+        var absoluteElementTop = elementRect.top + window.pageYOffset;
+        var height = elementRect.height ? elementRect.height : 100;
+        var middle = absoluteElementTop - (window.innerHeight / 2) + height / 2;
+        window.scrollTo(0, middle);
+    }
+
     function appendText(text) {
         if (vB_Editor[QR_EditorID].get_editor_contents().length > 0) {
             text = '\n' + text;
         }
         vB_Editor[QR_EditorID].insert_text(text);
         vB_Editor[QR_EditorID].collapse_selection_end();
+
+        scrollIntoMiddle(vB_Editor[QR_EditorID].textobj);
     }
 
     function appendQuote(text) {
