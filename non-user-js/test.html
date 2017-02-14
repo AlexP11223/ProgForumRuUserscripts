@@ -10,6 +10,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="video_embed.js"></script>
+<script src="newthread_forum_list.js"></script>
 
 <script>
     (function() {
@@ -17,6 +18,9 @@
             if (expected !== actual) {
                 throw new Error(msg ? msg : 'Assertion failed: ' + actual + ' !== ' + expected)
             }
+        }
+        function assertObjEqual(expected, actual, msg) {
+            assert(JSON.stringify(expected), JSON.stringify(actual), msg);
         }
 
         function testYoutubeParsing() {
@@ -58,11 +62,38 @@
             assert(false, videoembed.parseCoubId(''));
         }
 
+        function testUrlQueryParsing() {
+            var query = newthreadForumList.parseUrlQuery('?do=newthread&f=31');
+
+            assert('newthread', query['do']);
+            assert('31', query['f']);
+            assert(undefined, query['unknown']);
+        }
+
+        function testForumsParsing() {
+            var html = '<fieldset class="fieldset" style="margin:0px">				<div style="padding:3px">					<div>						<select style="width:100%"x size="13" multiple="multiple">							<option value="0" >Искать во всех открытых разделах</option>							<option value="subscribed">Искать в разделах, на которые вы подписаны</option>							<option value="45" class="fjdpth0" > cccc в программировании</option>x<option value="7" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Паскаль</option>						</select>					</div>					<div><label for="cb_childforums"><input type="checkbox" name="childforums" value="1" id="cb_childforums" checked="checked" />Включая подразделы</label></div>									</div>			</fieldset><fieldset class="fieldset" style="margin:0px">				<legend>Поиск по разделам</legend>				<div style="padding:3px">					<div>						<select style="width:100%" name="forumchoice[]" size="13" multiple="multiple">							<option value="0" >Искать во всех открытых разделах</option>							<option value="subscribed">Искать в разделах, на которые вы подписаны</option>							<option value="45" class="fjdpth0" > Новички в программировании</option><option value="31" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Помощь студентам</option><option value="7" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Паскаль</option><option value="99" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Исходники на любых языках программирования</option><option value="1" class="fjdpth0" selected="selected"> Delphi программирование</option><option value="2" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Общие вопросы Delphi</option><option value="47" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Мультимедиа в Delphi</option><option value="39" class="fjdpth1" selected="selected">&nbsp; &nbsp;  Компоненты Delphi</option><option value="3" class="fjdpth1" >&nbsp; &nbsp;  Работа с сетью в Delphi</option><option value="5" class="fjdpth1" >&nbsp; &nbsp;  БД в Delphi</option><option value="67" class="fjdpth1" >&nbsp; &nbsp;  Lazarus, Free Pascal, CodeTyphon</option><option value="8" class="fjdpth0" > Низкоуровневое программирование</option><option value="4" class="fjdpth1" >&nbsp; &nbsp;  Win Api</option><option value="9" class="fjdpth1" >&nbsp; &nbsp;  Assembler</option><option value="13" class="fjdpth0" > C++ программирование</option><option value="14" class="fjdpth1" >&nbsp; &nbsp;  Общие вопросы C/C++</option><option value="51" class="fjdpth1" >&nbsp; &nbsp;  Visual C++</option><option value="52" class="fjdpth1" >&nbsp; &nbsp;  C++ Builder</option><option value="40" class="fjdpth1" >&nbsp; &nbsp;  Qt и кроссплатформенное программирование С/С++</option><option value="53" class="fjdpth1" >&nbsp; &nbsp;  C/C++ Базы данных</option><option value="54" class="fjdpth1" >&nbsp; &nbsp;  C/C++ Сетевое программирование</option><option value="10" class="fjdpth0" > Java программирование</option><option value="11" class="fjdpth1" >&nbsp; &nbsp;  Общие вопросы по Java, Java SE</option><option value="49" class="fjdpth1" >&nbsp; &nbsp;  Java Мобильная разработка (Android)</option><option value="105" class="fjdpth1" >&nbsp; &nbsp;  Java для Web (EE, Servlet, JSP, Tomcat, Spring MVC)</option><option value="106" class="fjdpth1" >&nbsp; &nbsp;  Java Базы данных (JDBC, JPA, Hibernate)</option><option value="15" class="fjdpth0" > Web программирование</option><option value="16" class="fjdpth1" >&nbsp; &nbsp;  HTML и CSS</option><option value="44" class="fjdpth1" >&nbsp; &nbsp;  Язык SQL</option><option value="17" class="fjdpth1" >&nbsp; &nbsp;  PHP и другие серверные скрипты</option><option value="112" class="fjdpth1" >&nbsp; &nbsp;  Perl</option><option value="110" class="fjdpth1" >&nbsp; &nbsp;  Python</option><option value="111" class="fjdpth1" >&nbsp; &nbsp;  Ruby</option><option value="12" class="fjdpth1" >&nbsp; &nbsp;  Javascript, Ajax и другие клиентские скрипты</option><option value="66" class="fjdpth1" >&nbsp; &nbsp;  ActionScript, Flex, Flash</option><option value="48" class="fjdpth1" >&nbsp; &nbsp;  WordPress и другие CMS</option><option value="80" class="fjdpth1" >&nbsp; &nbsp;  SEO, Adwords, Direct, SMM, Youtube, marketing, branding</option><option value="55" class="fjdpth0" > Программирование для .NET</option><option value="59" class="fjdpth1" >&nbsp; &nbsp;  C# (си шарп)</option><option value="41" class="fjdpth1" >&nbsp; &nbsp;  Общие вопросы  .NET</option><option value="56" class="fjdpth1" >&nbsp; &nbsp;  ASP.NET</option><option value="58" class="fjdpth1" >&nbsp; &nbsp;  WPF, UWP, WinRT, XAML</option><option value="104" class="fjdpth1" >&nbsp; &nbsp;  Windows Forms</option><option value="60" class="fjdpth1" >&nbsp; &nbsp;  Базы данных (ADO.NET, LinqToSql, ORM Entity Framework, NHibernate)</option><option value="18" class="fjdpth0" > Microsoft Office и VBA</option><option value="20" class="fjdpth1" >&nbsp; &nbsp;  Microsoft Office Excel</option><option value="21" class="fjdpth1" >&nbsp; &nbsp;  Microsoft Office Access</option><option value="19" class="fjdpth1" >&nbsp; &nbsp;  Microsoft Office Word</option><option value="83" class="fjdpth0" > Операционные системы</option><option value="25" class="fjdpth1" >&nbsp; &nbsp;  Софт</option><option value="34" class="fjdpth1" >&nbsp; &nbsp;  Операционные системы общие вопросы</option><option value="61" class="fjdpth1" >&nbsp; &nbsp;  Windows</option><option value="62" class="fjdpth1" >&nbsp; &nbsp;  Linux (Ubuntu, Debian, Red Hat, CentOS, Mint)</option><option value="63" class="fjdpth1" >&nbsp; &nbsp;  Мобильные ОС (Android, iOS, Windows Phone)</option><option value="84" class="fjdpth1" >&nbsp; &nbsp;  Администрирование серверов, VPS, хостингов</option><option value="32" class="fjdpth0" > Технологии</option><option value="6" class="fjdpth1" >&nbsp; &nbsp;  Безопасность, Шифрование</option><option value="33" class="fjdpth1" >&nbsp; &nbsp;  Gamedev - cоздание и обсуждение игр</option><option value="50" class="fjdpth1" >&nbsp; &nbsp;  Проектирование web интерфейсов, приложений, базы данных</option><option value="97" class="fjdpth1" >&nbsp; &nbsp;  Графический Дизайн, Моделирование, изометрия, photoshop, 3d редакторы</option><option value="71" class="fjdpth1" >&nbsp; &nbsp;  CAD проектирование для инженеров AutoCAD, ArchiCAD</option><option value="107" class="fjdpth1" >&nbsp; &nbsp;  API подключение, XML, JSON</option><option value="69" class="fjdpth0" > Инженерный раздел</option><option value="46" class="fjdpth1" >&nbsp; &nbsp;  Железо</option><option value="96" class="fjdpth1" >&nbsp; &nbsp;  Радиоаппаратостроение, схемотехника, микроконтроллеры, робототехника, умный дом, 3D принтеры</option><option value="28" class="fjdpth0" > Работа для программиста</option><option value="30" class="fjdpth1" >&nbsp; &nbsp;  Работа на постоянной основе</option><option value="29" class="fjdpth1" >&nbsp; &nbsp;  Фриланс</option><option value="108" class="fjdpth1" >&nbsp; &nbsp;  Ищу работу, резюме, портфолио, отзывы</option><option value="23" class="fjdpth0" > Клуб программистов</option><option value="37" class="fjdpth1" >&nbsp; &nbsp;  О форуме и сайтах клуба</option><option value="24" class="fjdpth1" >&nbsp; &nbsp;  Обсуждение статей</option><option value="26" class="fjdpth1" >&nbsp; &nbsp;  Свободное общение</option>						</select>					</div>					<div><label for="cb_childforums"><input type="checkbox" name="childforums" value="1" id="cb_childforums" checked="checked" />Включая подразделы</label></div>									</div>			</fieldset>';
+
+            var forums = newthreadForumList.parseForums(html);
+
+            console.log(forums);
+
+            assert(true, forums instanceof Array);
+            assert(13, forums.length);
+            assert('Новички в программировании', forums[0].name);
+            assert('Помощь студентам', forums[0].children[0].name);
+            assert(31, forums[0].children[0].id);
+            assertObjEqual({ name: 'Клуб программистов', children: [
+                        { name: 'О форуме и сайтах клуба', id: 37 }, { name: 'Обсуждение статей', id: 24 }, { name: 'Свободное общение', id: 26 } ] },
+                    forums[12]);
+        }
+
         var result = window.document.getElementById('result');
 
         try {
             testYoutubeParsing();
             testCoubParsing();
+            testUrlQueryParsing();
+            testForumsParsing();
 
             result.innerHTML = 'ok';
         } catch (e) {
