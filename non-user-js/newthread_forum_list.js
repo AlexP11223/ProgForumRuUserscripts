@@ -92,49 +92,6 @@ var newthreadForumList = new function() {
         return html;
     }
 
-    function doInit(options) {
-        var urlQuery = self.parseUrlQuery(window.location.search);
-
-        if (urlQuery['do'] !== 'newthread' && urlQuery['do'] !== 'postthread') {
-            return;
-        }
-
-        if (!options.allNewThreadPages && $.inArray(parseInt(urlQuery["f"]), options.newthreadPagesIds) < 0) {
-            return;
-        }
-
-        var form = $('form[name="vbform"]');
-        if (!form.length) {
-            return;
-        }
-
-        var forumInput = form.find('input[name="f"]');
-        if (!forumInput.length) {
-            return;
-        }
-
-        var currentForumId = forumInput.attr('value');
-
-        var titleTable = form.find('td.smallfont:contains("Заголовок:")').closest('table');
-        if (!titleTable.length) {
-            return;
-        }
-
-        self.loadForums(function (forums) {
-            var listHtml = createForumsListHtml(forums);
-
-            $(listHtml).insertBefore(titleTable);
-
-            var cbb = $('#newthreadForum');
-
-            cbb.find('option[value="' + currentForumId + '"]').prop('selected',true);
-
-            $('select').on('change', function() {
-                forumInput.attr('value', this.value);
-            });
-        });
-    }
-
     this.init = function(options) {
         var defaultOptions = {
             allNewThreadPages: false,
@@ -152,8 +109,47 @@ var newthreadForumList = new function() {
         }
         window.newthreadForumListInitialized = true;
 
-        $(function() {
-            doInit(options);
+        var urlQuery = self.parseUrlQuery(window.location.search);
+
+        if (urlQuery['do'] !== 'newthread' && urlQuery['do'] !== 'postthread') {
+            return;
+        }
+
+        if (!options.allNewThreadPages && $.inArray(parseInt(urlQuery["f"]), options.newthreadPagesIds) < 0) {
+            return;
+        }
+
+        self.loadForums(function (forums) {
+            $(function() {
+                var form = $('form[name="vbform"]');
+                if (!form.length) {
+                    return;
+                }
+
+                var forumInput = form.find('input[name="f"]');
+                if (!forumInput.length) {
+                    return;
+                }
+
+                var currentForumId = forumInput.attr('value');
+
+                var titleTable = form.find('td.smallfont:contains("Заголовок:")').closest('table');
+                if (!titleTable.length) {
+                    return;
+                }
+
+                var listHtml = createForumsListHtml(forums);
+
+                $(listHtml).insertBefore(titleTable);
+
+                var cbb = $('#newthreadForum');
+
+                cbb.find('option[value="' + currentForumId + '"]').prop('selected',true);
+
+                $('select').on('change', function() {
+                    forumInput.attr('value', this.value);
+                });
+            });
         });
     };
 };
