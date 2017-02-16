@@ -97,6 +97,10 @@ var quickquote = new function() {
     function quotePost(postQuoteUrl, progressIndicator) {
         progressIndicator.show();
 
+        function fallbackToOldQuote() {
+            window.location.href = postQuoteUrl;
+        }
+
         $.get(postQuoteUrl, function(response) {
             var html = $.parseHTML(response);
 
@@ -104,9 +108,13 @@ var quickquote = new function() {
 
             if (quote) {
                 appendText(quote);
+            } else {
+                fallbackToOldQuote();
             }
         }).done(function() {
             progressIndicator.hide();
+        }).fail(function() {
+            fallbackToOldQuote();
         });
     }
 
