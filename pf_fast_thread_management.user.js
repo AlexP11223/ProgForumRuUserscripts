@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumFastThreadManagement
 // @namespace    http://programmersforum.ru/
-// @version      0.1
+// @version      0.2
 // @description  coverts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -19,11 +19,7 @@
 
     const adminRadioButtons = $('.vbmenu_option div label[for*="ao_"]:has(input[type="radio"])');
 
-    adminRadioButtons.children().css({
-        "-webkit-appearance": "none",
-        "-moz-appearance": "none",
-        "appearance": "none"
-    });
+    adminRadioButtons.children().hide();
 
     adminRadioButtons.css({
         "cursor": "pointer"
