@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         ProgrammersForumFastThreadManagement
+// @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.3
-// @description  coverts thread management radio buttons into links/buttons that work without click on the form submit button
+// @version      0.4
+// @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
 // @include      http://www.programmersforum.ru/showthread.php*
