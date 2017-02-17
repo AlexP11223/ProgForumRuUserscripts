@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumFastThreadManagement
 // @namespace    http://programmersforum.ru/
-// @version      0.2
+// @version      0.3
 // @description  coverts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -26,15 +26,15 @@
     });
 
     adminRadioButtons.eq(0).closest('.vbmenu_option').css({
-        "cursor": "default"
+        "cursor": "default",
+        "padding": 0
     });
 
     adminRadioButtons.eq(0).closest('tr').next(':has(input.button)').hide();
 
     addStyle(`
         .admin-menu-item {
-            padding-top: 4px;
-            padding-bottom: 4px;
+            padding: 4px;
             border: 1px;
             color: #1c3289;
             cursor: pointer;
