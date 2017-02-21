@@ -71,7 +71,7 @@ var newthreadForumList = new function() {
     function createForumsListHtml(forums) {
         var html = '<table cellpadding="0" cellspacing="0" border="0" class="fieldset"><tbody>';
 
-        html += '<tr><td class="smallfont" colspan="4">Раздел:</td></tr>';
+        html += '<tr><td class="smallfont" colspan="4">Уточните <b>раздел</b>, к которому относится вопрос:</td></tr>';
 
         var comboboxHtml = '<select id="newthreadForum">';
         $.each(forums, function (i, forum) {
