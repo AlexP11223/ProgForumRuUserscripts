@@ -69,12 +69,12 @@
         { id: 31, buttonText: 'Переместить в Помощь студентам' }
     ];
 
-    $.each(quickMoveForums, function () {
         $(`<div class="admin-menu-item"><label>${this.buttonText}</label></div>`)
+    $.each(quickMoveForums, function (i, item) {
             .appendTo(adminMenu)
             .click(function () {
                 $(loadingIndicatorHtml()).insertAfter($(this));
-                moveThread(this.id);
+                moveThread(item.id);
             });
     });
 
