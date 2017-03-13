@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.4
+// @version      0.5
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -18,12 +18,12 @@
     window.fastThreadManagement = true;
 
     function addStyle(css) {
-        $(`<style>${css}</style>`).appendTo('head');
+        $('<style>' + css + '</style>').appendTo('head');
     }
 
-    const adminRadioButtons = $('.vbmenu_option div label[for*="ao_"]:has(input[type="radio"])');
+    var adminRadioButtons = $('.vbmenu_option div label[for*="ao_"]:has(input[type="radio"])');
 
-    const adminMenu = adminRadioButtons.eq(0).closest('.vbmenu_option');
+    var adminMenu = adminRadioButtons.eq(0).closest('.vbmenu_option');
 
     adminRadioButtons.children().hide();
 
@@ -45,18 +45,18 @@
     }
 
     function moveThread(destForumId) {
-        $(`<form action="postings.php?do=domovethread&amp;t=${getThreadId()}" method="post" name="vbform">
-                <input type="hidden" name="s" value="">
-                <input type="hidden" name="securitytoken" value="${window.SECURITYTOKEN}">
-                <input type="hidden" name="t" value="${getThreadId()}">
-                <input type="hidden" name="destforumid" value="${destForumId}">
-                <input type="hidden" name="do" value="domovethread">
-                <input type="hidden" name="title" value="${getThreadTitle()}">
-                <input type="hidden" name="redirect" value="expires">
-                <input type="hidden" name="period" value="1">
-                <input type="hidden" name="frame" value="d">
-                <input type="hidden" name="redirecttitle" value="${getThreadTitle()}">
-            </form>`)
+        $('<form action="postings.php?do=domovethread&amp;t=' + getThreadId() + '" method="post" name="vbform">' +
+                '<input type="hidden" name="s" value="">' +
+                '<input type="hidden" name="securitytoken" value="' + window.SECURITYTOKEN + '">' +
+                '<input type="hidden" name="t" value="' + getThreadId() + '">' +
+                '<input type="hidden" name="destforumid" value="' +destForumId + '">' +
+                '<input type="hidden" name="do" value="domovethread">' +
+                '<input type="hidden" name="title" value="' + getThreadTitle() + '">' +
+                '<input type="hidden" name="redirect" value="expires">' +
+                '<input type="hidden" name="period" value="1">' +
+                '<input type="hidden" name="frame" value="d">' +
+                '<input type="hidden" name="redirecttitle" value="' + getThreadTitle() + '">' +
+                '</form>')
             .appendTo('body')
             .submit();
     }
@@ -65,12 +65,12 @@
         return '<img src="/images/1070/misc/progress.gif"/>';
     }
 
-    const quickMoveForums = [
+    var quickMoveForums = [
         { id: 31, buttonText: 'Переместить в Помощь студентам' }
     ];
 
-        $(`<div class="admin-menu-item"><label>${this.buttonText}</label></div>`)
     $.each(quickMoveForums, function (i, item) {
+        $('<div class="admin-menu-item"><label>' + item.buttonText + '</label></div>')
             .appendTo(adminMenu)
             .click(function () {
                 $(loadingIndicatorHtml()).insertAfter($(this));
@@ -89,17 +89,8 @@
         });
     }
 
-    addStyle(`
-        .admin-menu-item {
-            padding: 4px;
-            border: 1px;
-            color: #1c3289;
-            cursor: pointer;
-        }
-        .admin-menu-item:hover {
-            background: #ffffcc;
-            color: #000000;
-        }`);
+    addStyle('.admin-menu-item { padding: 4px; border: 1px; color: #1c3289; cursor: pointer; } ' +
+        '.admin-menu-item:hover { background: #ffffcc; color: #000000; }');
 
     setMenuStyle();
 })();
