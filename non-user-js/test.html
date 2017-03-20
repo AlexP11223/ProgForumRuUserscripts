@@ -11,6 +11,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="video_embed.js"></script>
 <script src="newthread_forum_list.js"></script>
+<script src="../pf_search_link.user.js"></script>
 
 <script>
     (function() {
@@ -87,6 +88,59 @@
                     forums[12]);
         }
 
+        function testWin1251UrlEncode() {
+            assert('PHP%20xml', searchlink.win1251UrlEncode('PHP xml'));
+            assert('%CF%E0%F1%EA%E0%EB%FC%20%E4%E5%EB%FC%F4%E8', searchlink.win1251UrlEncode('Паскаль дельфи'));
+            assert('a%26%23382%3B%26%23269%3B%F4', searchlink.win1251UrlEncode('ažčф'));
+        }
+
+        function testSearchQueryFiltering() {
+            var form1 = [
+                { name: 'do', value: 'process' },
+                { name: 'query', value: 'php' },
+                { name: 's', value: '' },
+                { name: 'securitytoken', value: '11111111' },
+                { name: 'quicksearch', value: '1' },
+                { name: 'childforums', value: '1' },
+                { name: 'exactname', value: '1' },
+                { name: 'showposts', value: '0' }
+            ];
+            var form2 = [
+                { name: 'do', value: 'process' },
+                { name: 'query', value: 'php' },
+                { name: 's', value: '' },
+                { name: 'securitytoken', value: '11111111' },
+                { name: 'childforums', value: '1' },
+                { name: 'exactname', value: '1' },
+                { name: 'showposts', value: '0' }
+            ];
+
+            assertObjEqual([
+                { name: 'query', value: 'php' },
+                { name: 'showposts', value: '0' },
+                { name: 'do', value: 'process' }
+            ], searchlink.createQuery(form1));
+            assertObjEqual([
+                { name: 'query', value: 'php' },
+                { name: 'showposts', value: '0' }
+            ], searchlink.createQuery(form1, true));
+            assertObjEqual([
+                { name: 'query', value: 'php' },
+                { name: 'childforums', value: '1' },
+                { name: 'exactname', value: '1' },
+                { name: 'showposts', value: '0' }
+            ], searchlink.createQuery(form2, true));
+        }
+
+        function testSearchQuerySerialization() {
+            var query = [
+                { name: 'query', value: 'PHP xml файл' },
+                { name: 'do', value: 'process' }
+            ];
+
+            assert('query=PHP%20xml%20%F4%E0%E9%EB&do=process', searchlink.serializeQuery(query));
+        }
+
         var result = window.document.getElementById('result');
 
         try {
@@ -94,6 +148,9 @@
             testCoubParsing();
             testUrlQueryParsing();
             testForumsParsing();
+            testWin1251UrlEncode();
+            testSearchQueryFiltering();
+            testSearchQuerySerialization();
 
             result.innerHTML = 'ok';
         } catch (e) {
