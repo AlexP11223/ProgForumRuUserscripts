@@ -109,7 +109,7 @@ var searchlink = new function() {
 
     function doInit() {
         var quickSearchTables = $('#navbar_search_menu, #threadsearch_menu, #header_right_cell').find('tbody');
-        var mainSearchTable = $('button[name="dosearch"]').parent().parent();
+        var mainSearchTable = $('input[name="dosearch"]').parent().parent();
 
         var quickSearchCopyLinks = $(
             '<tr class="search-copy-link"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)"">Скопировать ссылку</a></td></tr>')
@@ -117,6 +117,15 @@ var searchlink = new function() {
         var quickSearchFormCopyLinks = $(
             '<tr class="search-copy-form-link"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)"">Скопировать ссылку на форму</a></td></tr>')
             .appendTo(quickSearchTables);
+
+        var mainSearchLinksBlock = $('<div style="margin-top:8px"></div>').appendTo(mainSearchTable);
+
+        var mainSearchCopyLink = $(
+            '<div><a class="main-search-copy-link" href="javascript:void(0)"">Скопировать ссылку</a></div>')
+            .appendTo(mainSearchLinksBlock);
+        var mainSearchFormCopyLink = $(
+            '<div><a class="main-search-copy-form-link" href="javascript:void(0)"">Скопировать ссылку на форму</a></div>')
+            .appendTo(mainSearchLinksBlock);
 
         $.merge(quickSearchCopyLinks, quickSearchFormCopyLinks).hover(
             // simulate default vBulletin behavior
@@ -129,10 +138,10 @@ var searchlink = new function() {
                 $(this).children().removeClass('vbmenu_hilite vbmenu_hilite_alink');
             });
 
-        quickSearchCopyLinks.click(function (e) {
+        $.merge(quickSearchCopyLinks, mainSearchCopyLink).click(function (e) {
             onLinkClicked(e, $(this), false);
         });
-        quickSearchFormCopyLinks.click(function (e) {
+        $.merge(quickSearchFormCopyLinks, mainSearchFormCopyLink).click(function (e) {
             onLinkClicked(e, $(this), true);
         });
 
