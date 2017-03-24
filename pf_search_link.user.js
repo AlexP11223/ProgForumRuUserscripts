@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Search Link
 // @namespace    http://programmersforum.ru/
-// @version      0.2
+// @version      0.3
 // @description  adds buttons to copy search url
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -106,9 +106,11 @@ var searchlink = new function() {
         link.attr('href', url);
 
         $('.link-textbox').remove();
-        $('<input class="link-textbox" value="' + url +'" style="display: block; width: 400px" dir="rtl"/>')
+        $('<input class="link-textbox" style="display: block; width: 400px"/>')
             .appendTo(sender.parent())
-            .focus().select();
+            .focus()
+            .val(url)
+            .select();
 
         if (copyToClipboard()) {
             $('.link-popup').remove();
