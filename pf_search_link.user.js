@@ -1,12 +1,11 @@
 // ==UserScript==
-// @name         ProgrammersForumSearchLink
+// @name         ProgrammersForum Search Link
 // @namespace    http://programmersforum.ru/
-// @version      0.1
-// @description  adds button to copy search url
+// @version      0.2
+// @description  adds buttons to copy search url
 // @author       Alex P
-// @include      http://programmersforum.ru/*
-// @include      http://www.programmersforum.ru/*
-// @grant        GM_setClipboard
+// @include      *programmersforum.ru/*
+// @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_search_link.user.js
 // ==/UserScript==
 
@@ -83,6 +82,14 @@ var searchlink = new function() {
         return window.location.protocol + "//" + window.location.hostname + '/search.php?' + query;
     };
 
+    function copyToClipboard() {
+        try {
+            return document.execCommand('copy');
+        } catch (ex) {
+            return false;
+        }
+    }
+
     function onLinkClicked(e, sender, createSearchFormLink) {
         e.preventDefault();
         e.stopPropagation();
@@ -98,13 +105,18 @@ var searchlink = new function() {
         var link = sender.find('a');
         link.attr('href', url);
 
-        GM_setClipboard(url);
+        $('.link-textbox').remove();
+        $('<input class="link-textbox" value="' + url +'" style="display: block; width: 400px" dir="rtl"/>')
+            .appendTo(sender.parent())
+            .focus().select();
 
-        $('.link-popup').hide();
-        var popup = $('<span class="link-popup" style="display: none;">ссылка скопирована в буфер обмена</span>')
-            .appendTo(sender.parent());
-        popup.fadeIn();
-        popup.delay(2500).fadeOut();
+        if (copyToClipboard()) {
+            $('.link-popup').remove();
+            var popup = $('<span class="link-popup" style="display: none;">ссылка скопирована в буфер обмена</span>')
+                .appendTo(sender.parent());
+            popup.fadeIn();
+            popup.delay(2500).fadeOut();
+        }
     }
 
     function doInit() {
