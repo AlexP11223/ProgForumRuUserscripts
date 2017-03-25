@@ -12,6 +12,7 @@
 <script src="video_embed.js"></script>
 <script src="newthread_forum_list.js"></script>
 <script src="../pf_search_link.user.js"></script>
+<script src="search_link.js"></script>
 
 <script>
     (function() {
@@ -88,13 +89,13 @@
                     forums[12]);
         }
 
-        function testWin1251UrlEncode() {
-            assert('PHP%20xml', searchlink.win1251UrlEncode('PHP xml'));
-            assert('%CF%E0%F1%EA%E0%EB%FC%20%E4%E5%EB%FC%F4%E8', searchlink.win1251UrlEncode('Паскаль дельфи'));
-            assert('a%26%23382%3B%26%23269%3B%F4', searchlink.win1251UrlEncode('ažčф'));
+        function testWin1251UrlEncode(obj) {
+            assert('PHP%20xml', obj.win1251UrlEncode('PHP xml'));
+            assert('%CF%E0%F1%EA%E0%EB%FC%20%E4%E5%EB%FC%F4%E8', obj.win1251UrlEncode('Паскаль дельфи'));
+            assert('a%26%23382%3B%26%23269%3B%F4', obj.win1251UrlEncode('ažčф'));
         }
 
-        function testSearchQueryFiltering() {
+        function testSearchQueryFiltering(obj) {
             var form1 = [
                 { name: 'do', value: 'process' },
                 { name: 'query', value: 'php' },
@@ -119,26 +120,26 @@
                 { name: 'query', value: 'php' },
                 { name: 'showposts', value: '0' },
                 { name: 'do', value: 'process' }
-            ], searchlink.createQuery(form1));
+            ], obj.createQuery(form1));
             assertObjEqual([
                 { name: 'query', value: 'php' },
                 { name: 'showposts', value: '0' }
-            ], searchlink.createQuery(form1, true));
+            ], obj.createQuery(form1, true));
             assertObjEqual([
                 { name: 'query', value: 'php' },
                 { name: 'childforums', value: '1' },
                 { name: 'exactname', value: '1' },
                 { name: 'showposts', value: '0' }
-            ], searchlink.createQuery(form2, true));
+            ], obj.createQuery(form2, true));
         }
 
-        function testSearchQuerySerialization() {
+        function testSearchQuerySerialization(obj) {
             var query = [
                 { name: 'query', value: 'PHP xml файл' },
                 { name: 'do', value: 'process' }
             ];
 
-            assert('query=PHP%20xml%20%F4%E0%E9%EB&do=process', searchlink.serializeQuery(query));
+            assert('query=PHP%20xml%20%F4%E0%E9%EB&do=process', obj.serializeQuery(query));
         }
 
         var result = window.document.getElementById('result');
@@ -148,9 +149,14 @@
             testCoubParsing();
             testUrlQueryParsing();
             testForumsParsing();
-            testWin1251UrlEncode();
-            testSearchQueryFiltering();
-            testSearchQuerySerialization();
+
+            testWin1251UrlEncode(searchlink);
+            testWin1251UrlEncode(searchlink_u);
+
+            testSearchQueryFiltering(searchlink);
+            testSearchQueryFiltering(searchlink_u);
+            testSearchQuerySerialization(searchlink);
+            testSearchQuerySerialization(searchlink_u);
 
             result.innerHTML = 'ok';
         } catch (e) {
