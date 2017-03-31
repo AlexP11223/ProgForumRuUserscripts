@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.5
+// @version      0.6
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -44,16 +44,16 @@
         return $("#threadsearch_menu").find("a")[1].href.split("=")[1];
     }
 
-    function moveThread(destForumId) {
+    function moveThread(destForum) {
         $('<form action="postings.php?do=domovethread&amp;t=' + getThreadId() + '" method="post" name="vbform">' +
                 '<input type="hidden" name="s" value="">' +
                 '<input type="hidden" name="securitytoken" value="' + window.SECURITYTOKEN + '">' +
                 '<input type="hidden" name="t" value="' + getThreadId() + '">' +
-                '<input type="hidden" name="destforumid" value="' +destForumId + '">' +
+                '<input type="hidden" name="destforumid" value="' + destForum.id + '">' +
                 '<input type="hidden" name="do" value="domovethread">' +
                 '<input type="hidden" name="title" value="' + getThreadTitle() + '">' +
                 '<input type="hidden" name="redirect" value="expires">' +
-                '<input type="hidden" name="period" value="1">' +
+                '<input type="hidden" name="period" value="' + destForum.period +'">' +
                 '<input type="hidden" name="frame" value="d">' +
                 '<input type="hidden" name="redirecttitle" value="' + getThreadTitle() + '">' +
                 '</form>')
@@ -66,31 +66,56 @@
     }
 
     var quickMoveForums = [
-        { id: 31, buttonText: 'Переместить в Помощь студентам' }
+        { id: 31, buttonText: 'Помощь студентам', period: 1 },
+        { id: 29, buttonText: 'Фриланс', period: 7 },
+        { id: 30, buttonText: 'Работу', period: 7 },
+        { id: 26, buttonText: 'Общение', period: 7 },
+        { id: 50, buttonText: 'Программирование', period: 7 },
+        { id: 80, buttonText: 'Web', period: 7 },
+        { id: 46, buttonText: 'Железо', period: 7 },
+        { id: 61, buttonText: 'Windows', period: 7 },
     ];
 
+    var currQuickMoveForum = quickMoveForums[0];
+
+    var forumsSelectHtml = '';
     $.each(quickMoveForums, function (i, item) {
-        $('<div class="admin-menu-item"><label>' + item.buttonText + '</label></div>')
-            .appendTo(adminMenu)
-            .click(function () {
-                $(loadingIndicatorHtml()).insertAfter($(this));
-                moveThread(item.id);
-            });
+        forumsSelectHtml += '<option value="' + item.id + '" data-period="' + item.period + '">' + item.buttonText + '</option>';
+    });
+
+    $('<div class="admin-menu-item cbb-admin-menu-item"><label>Переместить в </label>' +
+        '<select class="forum-select-cbb">' + forumsSelectHtml + '</select></div>')
+        .appendTo(adminMenu)
+        .click(function () {
+            $(loadingIndicatorHtml()).insertAfter($(this));
+            moveThread(currQuickMoveForum);
+        });
+    var cbb = $('.forum-select-cbb');
+    cbb.click(function (e) {
+        e.stopPropagation();
+    });
+    cbb.change(function () {
+        currQuickMoveForum = { id: this.value, period: $(this).find(':selected').data('period') };
     });
 
     function setMenuStyle() {
-        $(".admin-menu-item").children().css({
-            "cursor": "pointer"
+        $('.admin-menu-item').children().css({
+            'cursor': 'pointer'
+        });
+        $('.cbb-admin-menu-item select').css({
+            'cursor': 'default'
         });
 
         adminMenu.css({
-            "cursor": "default",
-            "padding": 0
+            'cursor': 'default',
+            'padding': 0
         });
     }
 
     addStyle('.admin-menu-item { padding: 4px; border: 1px; color: #1c3289; cursor: pointer; } ' +
-        '.admin-menu-item:hover { background: #ffffcc; color: #000000; }');
+        '.admin-menu-item:hover { background: #ffffcc; color: #000000; } ' +
+        '.cbb-admin-menu-item { padding: 0 4px; padding-right: 0; } ' +
+        '.cbb-admin-menu-item select { padding: 4px 0; width: 150px; } ');
 
     setMenuStyle();
 })();
