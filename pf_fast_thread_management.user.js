@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.6
+// @version      0.7
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -96,6 +96,7 @@
     });
     cbb.change(function () {
         currQuickMoveForum = { id: this.value, period: $(this).find(':selected').data('period') };
+        moveThread(currQuickMoveForum);
     });
 
     function setMenuStyle() {
