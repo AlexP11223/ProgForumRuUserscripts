@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.7
+// @version      0.8
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -45,6 +45,8 @@
     }
 
     function moveThread(destForum) {
+        $(loadingIndicatorHtml()).insertAfter($(this));
+
         $('<form action="postings.php?do=domovethread&amp;t=' + getThreadId() + '" method="post" name="vbform">' +
                 '<input type="hidden" name="s" value="">' +
                 '<input type="hidden" name="securitytoken" value="' + window.SECURITYTOKEN + '">' +
@@ -87,7 +89,6 @@
         '<select class="forum-select-cbb">' + forumsSelectHtml + '</select></div>')
         .appendTo(adminMenu)
         .click(function () {
-            $(loadingIndicatorHtml()).insertAfter($(this));
             moveThread(currQuickMoveForum);
         });
     var cbb = $('.forum-select-cbb');
