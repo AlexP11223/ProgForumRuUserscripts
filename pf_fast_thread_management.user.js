@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.9
+// @version      0.10
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -36,12 +36,27 @@
         $(this).closest('form')[0].submit();
     });
 
+    function parseUrlQuery(queryStr) {
+        var dict = {};
+        var queries = queryStr.replace(/^\?/, '').split('&');
+        var i;
+        for (i = 0; i < queries.length; i++) {
+            var parts = queries[i].split('=');
+            dict[parts[0]] = parts[1];
+        }
+        return dict;
+    }
+
     function getThreadTitle() {
         return $.trim($('td:has(a[href*="' + location.search + '"]) strong')[0].innerText.trim());
     }
 
     function getThreadId() {
         return $("#threadsearch_menu").find("a")[1].href.split("=")[1];
+    }
+
+    function getForumId() {
+        return parseUrlQuery($('table.tborder span.navbar:last a')[0].search)['f'];
     }
 
     function moveThread(destForum) {
@@ -65,7 +80,9 @@
         return '<img src="/images/1070/misc/progress.gif"/>';
     }
 
-    var quickMoveForums = [
+    var forumId = getForumId();
+
+    var quickMoveForums = $.grep([
         { id: 31, buttonText: 'Помощь студентам', period: 1 },
         { id: 29, buttonText: 'Фриланс', period: 7 },
         { id: 30, buttonText: 'Работу', period: 7 },
@@ -74,7 +91,9 @@
         { id: 80, buttonText: 'Web', period: 7 },
         { id: 46, buttonText: 'Железо', period: 7 },
         { id: 61, buttonText: 'Windows', period: 7 },
-    ];
+    ], function (item) {
+        return item.id != forumId;
+    });
 
     var currQuickMoveForum = quickMoveForums[0];
 
