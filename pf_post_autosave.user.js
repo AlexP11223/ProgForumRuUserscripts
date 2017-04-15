@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumAutosave
 // @namespace    http://programmersforum.ru/
-// @version      0.9
+// @version      0.10
 // @description  saves new post text to localStorage and restores it if closed the page without submitting (separate for each thread)
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -46,7 +46,7 @@ var postautosave_u = new function() {
             try {
                 submitted = true;
                 if (timer) {
-                    clearTimeout(timer);
+                    timer = clearTimeout(timer);
                 }
                 window.localStorage.removeItem(storageId);
             } catch(e) {
