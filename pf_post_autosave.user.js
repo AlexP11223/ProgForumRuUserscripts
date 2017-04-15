@@ -62,6 +62,9 @@ var postautosave_u = new function() {
                 window.localStorage.setItem(storageId, text);
             } else {
                 if (window.localStorage.getItem(storageId)) {
+                    if (!(form.find('textarea').length)) {
+                        return;
+                    }
                     window.localStorage.removeItem(storageId);
                 }
             }
