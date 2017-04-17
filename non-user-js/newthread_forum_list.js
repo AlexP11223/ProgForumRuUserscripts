@@ -146,7 +146,7 @@ var newthreadForumList = new function() {
 
                 cbb.find('option[value="' + currentForumId + '"]').prop('selected',true);
 
-                $('select').on('change', function() {
+                cbb.change(function() {
                     forumInput.attr('value', this.value);
                 });
             });
