@@ -15,6 +15,21 @@ pre code, .hljs {
 pre code {
     width: 800px;
 }
+@media (min-width: 1300px) {
+    pre code {
+        width: 1000px;
+    }
+}
+@media (min-width: 1600px) {
+    pre code {
+        width: 1300px;
+    }
+}
+@media (min-width: 1900px) {
+    pre code {
+        width: 1500px;
+    }
+}
 
 .hljs-subst, .hljs-title {
     font-weight: normal;
