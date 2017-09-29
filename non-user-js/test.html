@@ -8,11 +8,15 @@
 
 <div id="result"></div>
 
+<div id="data"></div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="video_embed.js"></script>
 <script src="newthread_forum_list.js"></script>
 <script src="../pf_search_link.user.js"></script>
 <script src="search_link.js"></script>
+<script src="../pf_code_highlighter.user.js"></script>
+<script src="highlight/code_highlighter.js"></script>
 
 <script>
     (function() {
@@ -142,6 +146,38 @@
             assert('query=PHP%20xml%20%F4%E0%E9%EB&do=process', obj.serializeQuery(query));
         }
 
+        function testGetForumId(obj) {
+            var data = window.document.getElementById('data');
+
+            data.innerHTML = 'nothing';
+
+            assert(0, obj.getForumId());
+
+            data.innerHTML = `<table cellpadding="0" cellspacing="0" border="0">
+			<tbody><tr valign="bottom">
+				<td><a href="#" onclick="history.back(1); return false;"></a></td>
+				<td>&nbsp;</td>
+
+				<td width="100%"><span class="navbar"><a href="index.php" accesskey="1">Форум программистов</a></span>
+	<span class="navbar">&gt; <a href="forumdisplay.php?f=18">Microsoft Office и VBA</a></span>
+
+
+	<span class="navbar">&gt; <a href="forumdisplay.php?f=20">Microsoft Office Excel</a></span>
+
+</td>
+			</tr>
+			</tbody></table>`;
+
+            assert(20, obj.getForumId());
+        }
+
+        function testgetForumLanguages(obj) {
+            assert(true, obj.getForumLanguages(20).includes('vbnet'));
+            assert(true, obj.getForumLanguages(20).includes('sql'));
+            assert(false, obj.getForumLanguages(20).includes('delphi'));
+            assertObjEqual([], obj.getForumLanguages(0));
+        }
+
         var result = window.document.getElementById('result');
 
         try {
@@ -157,6 +193,15 @@
             testSearchQueryFiltering(searchlink_u);
             testSearchQuerySerialization(searchlink);
             testSearchQuerySerialization(searchlink_u);
+
+            testgetForumLanguages(codehighlighter_u);
+            testGetForumId(codehighlighter_u);
+
+            window.codeHighlighterInitialized = false;
+            codehighlighter.init();
+
+            testGetForumId(codehighlighter);
+            testgetForumLanguages(codehighlighter);
 
             result.innerHTML = 'ok';
         } catch (e) {
