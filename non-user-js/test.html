@@ -175,7 +175,7 @@
             assert(true, obj.getForumLanguages(20).includes('vbnet'));
             assert(true, obj.getForumLanguages(20).includes('sql'));
             assert(false, obj.getForumLanguages(20).includes('delphi'));
-            assertObjEqual([], obj.getForumLanguages(0));
+            assertObjEqual(null, obj.getForumLanguages(0));
         }
 
         var result = window.document.getElementById('result');

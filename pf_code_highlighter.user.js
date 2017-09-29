@@ -38,7 +38,7 @@ var codehighlighter_u = new function() {
     };
 
     this.getForumLanguages = function(forumId) {
-        return self.forumLanguagesMap[forumId] || [];
+        return self.forumLanguagesMap[forumId] || null;
     };
 
     function highlight(codeBlock) {
