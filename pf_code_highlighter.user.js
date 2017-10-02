@@ -15,7 +15,7 @@ var codehighlighter_u = new function() {
 
     var self = this;
 
-    var forumLanguagesMap = null;
+    self.forumLanguagesMap = null;
 
     function parseUrlQuery(queryStr) {
         var dict = {};
