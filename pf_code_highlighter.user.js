@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Code Highlighter
 // @namespace    http://programmersforum.ru/
-// @version      0.1
+// @version      0.2
 // @description  Limits code language autodetection depending on forum
 // @author       Alex P
 // @include      http://programmersforum.ru/*
@@ -114,7 +114,7 @@ var codehighlighter_u = new function() {
                 2: [ 'delphi', 'dos', 'ini', 'json', 'xml', 'css', 'sql' ],
                 39: [ 'delphi', 'dos', 'ini', 'json', 'xml', 'css', 'sql' ],
                 47: [ 'delphi', 'dos', 'ini', 'json', 'xml', 'css', 'sql' ],
-                3: [ 'delphi', 'dos', 'ini', 'json', 'xml', 'css', 'sql' ],
+                3: [ 'delphi', 'dos', 'ini', 'json', 'xml', 'css', 'sql', 'http' ],
                 5: [ 'delphi', 'dos', 'ini', 'json', 'xml', 'css', 'sql' ],
 
                 14: [ 'cpp', 'dos', 'x86asm', 'ini', 'json', 'xml', 'css', 'sql', 'cmake', 'makefile' ],
