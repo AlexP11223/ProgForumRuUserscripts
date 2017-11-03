@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.10
+// @version      0.11
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -91,6 +91,9 @@
         { id: 80, buttonText: 'Web', period: 7 },
         { id: 46, buttonText: 'Железо', period: 7 },
         { id: 61, buttonText: 'Windows', period: 7 },
+        { id: 2, buttonText: 'Delphi', period: 7 },
+        { id: 20, buttonText: 'Excel', period: 7 },
+        { id: 14, buttonText: 'C++', period: 7 },
     ], function (item) {
         return item.id != forumId;
     });
