@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.1
+// @version      0.2
 // @description  adds country/city info on the page with user IP
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
@@ -12,6 +12,8 @@
 
 (function() {
     'use strict';
+
+    const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
 
     function getJson(url, success, error) {
         const request = new XMLHttpRequest();
@@ -44,8 +46,8 @@
             error);
     }
 
-    function requestFreegeoip(ip, success, error) {
-        getJson(`http://freegeoip.net/json/${ip}`, function (data) {
+    function requestIpstack(ip, success, error) {
+        getJson(`http://api.ipstack.com/${ip}?access_key=${IPSTACK_API_KEY}`, function (data) {
                 success({ country: data.country_name, region: data.region_name, city: data.city });
             },
             error);
@@ -87,9 +89,9 @@
         appendLine('Месторасположение (ip-api.com)', formatError(error));
     });
 
-    requestFreegeoip(ip, function (data) {
-            appendLine('Месторасположение (freegeoip.net)', formatGeoipData(data));
+    requestIpstack(ip, function (data) {
+            appendLine('Месторасположение (ipstack.com)', formatGeoipData(data));
     }, function (error) {
-        appendLine('Месторасположение (freegeoip.net)', formatError(error));
+        appendLine('Месторасположение (ipstack.com)', formatError(error));
     });
 })();
