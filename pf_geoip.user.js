@@ -10,7 +10,7 @@
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_geoip.user.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
@@ -19,7 +19,7 @@
         const request = new XMLHttpRequest();
         request.open('GET', url, true);
 
-        request.onload = function() {
+        request.onload = function () {
             if (request.status >= 200 && request.status < 400) {
                 const data = JSON.parse(request.responseText);
                 success(data);
@@ -28,7 +28,7 @@
             }
         };
 
-        request.onerror = function() {
+        request.onerror = function () {
             error('Connection error');
         };
 
@@ -38,7 +38,7 @@
     function requestIpApi(ip, success, error) {
         getJson(`http://ip-api.com/json/${ip}`, function (data) {
                 if (data.status === 'success') {
-                    success({ country: data.country, region: data.regionName, city: data.city, isp: data.isp });
+                    success({country: data.country, region: data.regionName, city: data.city, isp: data.isp});
                 } else {
                     error(`API error ${data.message}`);
                 }
@@ -48,7 +48,7 @@
 
     function requestIpstack(ip, success, error) {
         getJson(`http://api.ipstack.com/${ip}?access_key=${IPSTACK_API_KEY}`, function (data) {
-                success({ country: data.country_name, region: data.region_name, city: data.city });
+                success({country: data.country_name, region: data.region_name, city: data.city});
             },
             error);
     }
@@ -84,13 +84,13 @@
     }
 
     requestIpApi(ip, function (data) {
-            appendLine('Месторасположение (ip-api.com)', formatGeoipData(data));
+        appendLine('Месторасположение (ip-api.com)', formatGeoipData(data));
     }, function (error) {
         appendLine('Месторасположение (ip-api.com)', formatError(error));
     });
 
     requestIpstack(ip, function (data) {
-            appendLine('Месторасположение (ipstack.com)', formatGeoipData(data));
+        appendLine('Месторасположение (ipstack.com)', formatGeoipData(data));
     }, function (error) {
         appendLine('Месторасположение (ipstack.com)', formatError(error));
     });
