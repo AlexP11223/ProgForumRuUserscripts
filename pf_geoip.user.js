@@ -16,23 +16,11 @@
     const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
 
     function getJson(url, success, error) {
-        const request = new XMLHttpRequest();
-        request.open('GET', url, true);
-
-        request.onload = function () {
-            if (request.status >= 200 && request.status < 400) {
-                const data = JSON.parse(request.responseText);
-                success(data);
-            } else {
+        $.getJSON(url, function (data) {
+            success(data);
+        }).fail(function (request) {
                 error(`HTTP error ${request.status} ${request.statusText}`);
-            }
-        };
-
-        request.onerror = function () {
-            error('Connection error');
-        };
-
-        request.send();
+            });
     }
 
     function requestIpApi(ip, success, error) {
