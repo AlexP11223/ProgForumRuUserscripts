@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.2
-// @description  adds country/city info on the page with user IP
+// @version      0.3
+// @description  adds country/city info on the page with user IP, as well as current user agent for online user
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
 // @include      http://www.programmersforum.ru/postings.php?do=getip*
@@ -23,6 +23,17 @@
             });
     }
 
+    function parseUrlQuery(queryStr) {
+        const dict = {};
+        const queries = queryStr.replace(/^\?/, '').split('&');
+        let i;
+        for (i = 0; i < queries.length; i++) {
+            const parts = queries[i].split('=');
+            dict[parts[0]] = parts[1];
+        }
+        return dict;
+    }
+
     function requestIpApi(ip, success, error) {
         getJson(`http://ip-api.com/json/${ip}`, function (data) {
                 if (data.status === 'success') {
@@ -39,6 +50,44 @@
                 success({country: data.country_name, region: data.region_name, city: data.city});
             },
             error);
+    }
+
+    function loadUserAgentForUser(userId, success, error) {
+        $.get('http://www.programmersforum.ru/online.php?s=&sortfield=time&sortorder=desc&who=members&ua=1&pp=50', function (html) {
+            const doc = $(html);
+            const userNode = doc.find(`#woltable a[href="member.php?u=${userId}"]`);
+            if (!userNode.length)
+                return;
+
+            const row = userNode.closest('tr');
+            const cellHtml = row.find('a[id^="resolveip"]').parent().html();
+
+            const ua = cellHtml.substr(cellHtml.indexOf('<br>') + 4).trim();
+
+            success(ua);
+        }).fail(function (request) {
+            error(`HTTP error ${request.status} ${request.statusText}`);
+        });
+    }
+
+    function loadUserAgent(success, error) {
+        const urlQuery = parseUrlQuery(window.location.search);
+
+        if (!urlQuery['p']) {
+            return;
+        }
+        const postId = parseInt(urlQuery['p']);
+
+        $.get(`http://www.programmersforum.ru/showpost.php?p=${postId}`, function (html) {
+            const doc = $(html);
+            const href = doc.find('.bigusername').attr('href');
+            const query = parseUrlQuery(href.substr(href.indexOf('?') + 1));
+            const userId = query['u'];
+
+            loadUserAgentForUser(userId, success, error);
+        }).fail(function (request) {
+            error(`HTTP error ${request.status} ${request.statusText}`);
+        });
     }
 
     function formatGeoipData(data) {
@@ -81,5 +130,11 @@
         appendLine('Месторасположение (ipstack.com)', formatGeoipData(data));
     }, function (error) {
         appendLine('Месторасположение (ipstack.com)', formatError(error));
+    });
+
+    loadUserAgent(function (userAgent) {
+        appendLine('Текущий User-Agent', userAgent);
+    }, function (error) {
+        appendLine('Текущий User-Agent', formatError(error));
     });
 })();
