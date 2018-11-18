@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.3
-// @description  adds country/city info on the page with user IP, as well as current user agent for online user
+// @version      0.4
+// @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
 // @include      http://www.programmersforum.ru/postings.php?do=getip*
@@ -52,25 +52,49 @@
             error);
     }
 
-    function loadUserAgentForUser(userId, success, error) {
+    function getSecurityToken(html) {
+        const m = html.match(/var SECURITYTOKEN = "(.+)"/);
+        return m ? m[1] : null;
+    }
+
+    function loadOnlineInfoForUser(userId, success, error) {
         $.get('http://www.programmersforum.ru/online.php?s=&sortfield=time&sortorder=desc&who=members&ua=1&pp=50', function (html) {
             const doc = $(html);
             const userNode = doc.find(`#woltable a[href="member.php?u=${userId}"]`);
-            if (!userNode.length)
+            if (!userNode.length) {
+                error('Оффлайн');
                 return;
+            }
 
             const row = userNode.closest('tr');
-            const cellHtml = row.find('a[id^="resolveip"]').parent().html();
+            const ipResolveLink = row.find('a[id^="resolveip"]');
+            const cellHtml = ipResolveLink.parent().html();
 
             const ua = cellHtml.substr(cellHtml.indexOf('<br>') + 4).trim();
+            const ip = ipResolveLink.text().trim();
 
-            success(ua);
+            const securityToken = getSecurityToken(html);
+            if (!securityToken){
+                success(ua, ip);
+            }
+
+            $.post(ipResolveLink.attr('href'), {
+                'securitytoken': securityToken,
+                'do': 'resolveip',
+                'ajax': 1,
+                'ipaddress': ip
+            }, function (result) {
+                const host = $(result).text();
+                success(ua, ip, host);
+            }).fail(function (request) {
+                success(ua, ip);
+            });
         }).fail(function (request) {
             error(`HTTP error ${request.status} ${request.statusText}`);
         });
     }
 
-    function loadUserAgent(success, error) {
+    function loadOnlineInfo(success, error) {
         const urlQuery = parseUrlQuery(window.location.search);
 
         if (!urlQuery['p']) {
@@ -84,7 +108,7 @@
             const query = parseUrlQuery(href.substr(href.indexOf('?') + 1));
             const userId = query['u'];
 
-            loadUserAgentForUser(userId, success, error);
+            loadOnlineInfoForUser(userId, success, error);
         }).fail(function (request) {
             error(`HTTP error ${request.status} ${request.statusText}`);
         });
@@ -110,31 +134,52 @@
 
     const container = ipElement.parentNode;
 
-    function appendLine(name, content) {
-        function elementFromString(html) {
-            const range = document.createRange();
-            return range.createContextualFragment(html);
-        }
-
-        container.appendChild(elementFromString(`<br>${name}: `));
-        container.appendChild(elementFromString(`<strong>${content}</strong>`));
+    function elementFromString(html) {
+        const range = document.createRange();
+        return range.createContextualFragment(html);
     }
 
+    function appendLine(parent, name, content) {
+        parent.appendChild(elementFromString(`<div>${name}: <strong>${content}</strong></div>`));
+    }
+
+    container.appendChild(elementFromString('<div id="postGeo"></div>'));
+    container.appendChild(elementFromString('<h4 style="margin-top: 20px; margin-bottom: 0; font-weight: normal">Текущие данные:</h4><div id="onlineUserInfo"></div>'));
+
+    const postUserInfoContainer = $('#postGeo')[0];
+    const onlineUserInfoContainer = $('#onlineUserInfo')[0];
+
     requestIpApi(ip, function (data) {
-        appendLine('Месторасположение (ip-api.com)', formatGeoipData(data));
+        appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
     }, function (error) {
-        appendLine('Месторасположение (ip-api.com)', formatError(error));
+        appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
     });
 
     requestIpstack(ip, function (data) {
-        appendLine('Месторасположение (ipstack.com)', formatGeoipData(data));
+        appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
     }, function (error) {
-        appendLine('Месторасположение (ipstack.com)', formatError(error));
+        appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
     });
 
-    loadUserAgent(function (userAgent) {
-        appendLine('Текущий User-Agent', userAgent);
+    loadOnlineInfo(function (userAgent, ip, host) {
+        appendLine(onlineUserInfoContainer, 'User-Agent', userAgent);
+        appendLine(onlineUserInfoContainer, 'IP адрес', ip);
+        if (host) {
+            appendLine(onlineUserInfoContainer, 'Хост', host);
+        }
+
+        requestIpApi(ip, function (data) {
+            appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
+        }, function (error) {
+            appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
+        });
+
+        requestIpstack(ip, function (data) {
+            appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
+        }, function (error) {
+            appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
+        });
     }, function (error) {
-        appendLine('Текущий User-Agent', formatError(error));
+        onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
     });
 })();
