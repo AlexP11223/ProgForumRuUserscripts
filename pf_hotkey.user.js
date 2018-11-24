@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumHotkey
 // @namespace    http://programmersforum.ru/
-// @version      0.1
+// @version      0.2
 // @description  allows to submit posts with Ctrl+Enter
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -16,7 +16,9 @@
 
         // Ctrl-Enter pressed
         if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
-            $(this).closest('form').submit();
+            const textarea = $(this);
+            textarea.closest('form').submit();
+            textarea.blur();
         }
     });
 })();
