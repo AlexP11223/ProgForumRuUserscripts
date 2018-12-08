@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.5
+// @version      0.6
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
@@ -68,14 +68,16 @@
 
             const row = userNode.closest('tr');
             const ipResolveLink = row.find('a[id^="resolveip"]');
-            const cellHtml = ipResolveLink.parent().html();
+            const ipCellHtml = ipResolveLink.parent().html();
 
-            const ua = cellHtml.substr(cellHtml.indexOf('<br>') + 4).trim();
+            const ua = ipCellHtml.substr(ipCellHtml.indexOf('<br>') + 4).trim();
             const ip = ipResolveLink.text().trim();
+
+            const time = row.find('.time').html();
 
             const securityToken = getSecurityToken(html);
             if (!securityToken){
-                success(ua, ip);
+                success(ua, ip, null, time);
             }
 
             $.post(ipResolveLink.attr('href'), {
@@ -85,9 +87,9 @@
                 'ipaddress': ip
             }, function (result) {
                 const host = $(result).text();
-                success(ua, ip, host);
+                success(ua, ip, host, time);
             }).fail(function (request) {
-                success(ua, ip);
+                success(ua, ip, null, time);
             });
         }).fail(function (request) {
             error(`HTTP error ${request.status} ${request.statusText}`);
@@ -158,7 +160,7 @@
     }
 
     container.appendChild(elementFromString('<div id="postGeo"></div>'));
-    container.appendChild(elementFromString('<h4 style="margin-top: 20px; margin-bottom: 0; font-weight: normal">Текущие данные:</h4><div id="onlineUserInfo"></div>'));
+    container.appendChild(elementFromString('<h4 style="margin-top: 20px; margin-bottom: 0; font-weight: normal">Текущие данные<span id="onlineTime"></span>:</h4><div id="onlineUserInfo"></div>'));
 
     const postUserInfoContainer = $('#postGeo')[0];
     const onlineUserInfoContainer = $('#onlineUserInfo')[0];
@@ -175,7 +177,8 @@
         appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
     });
 
-    loadOnlineInfo(function (userAgent, ip, host) {
+    loadOnlineInfo(function (userAgent, ip, host, time) {
+        $('#onlineTime').html(` (<strong>${time}</strong>)`);
         appendLine(onlineUserInfoContainer, 'User-Agent', '<span id="parsedUa"></span>' + userAgent);
         parseUserAgent(userAgent, function (uaData) {
             const container = $('#parsedUa');
