@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.4
+// @version      0.5
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
@@ -126,6 +126,20 @@
         return `<span style="color: red;">${error}</span>`;
     }
 
+    function loadScript(url, callback) {
+        const script = document.createElement('script');
+        script.onload = callback;
+        script.setAttribute("type","text/javascript");
+        script.setAttribute("src", url);
+        document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
+    function parseUserAgent(userAgent, callback) {
+        loadScript('https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js', function () {
+            callback(UAParser(userAgent));
+        });
+    }
+
     const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
     if (!ipElement)
         return;
@@ -162,7 +176,11 @@
     });
 
     loadOnlineInfo(function (userAgent, ip, host) {
-        appendLine(onlineUserInfoContainer, 'User-Agent', userAgent);
+        appendLine(onlineUserInfoContainer, 'User-Agent', '<span id="parsedUa"></span>' + userAgent);
+        parseUserAgent(userAgent, function (uaData) {
+            const container = $('#parsedUa');
+            container.html(`${uaData.os.name} ${uaData.os.version}, ${uaData.browser.name} ${uaData.browser.version}<br/>`);
+        });
         appendLine(onlineUserInfoContainer, 'IP адрес', ip);
         if (host) {
             appendLine(onlineUserInfoContainer, 'Хост', host);
