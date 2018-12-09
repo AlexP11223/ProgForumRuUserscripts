@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.7
+// @version      0.8
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
@@ -142,6 +142,31 @@
         });
     }
 
+    // some user agents are truncated
+    function isYandexBrowser(ua) {
+        return ua.split(' ').pop().indexOf('Ya') > -1;
+    }
+
+    function isChrome(ua) {
+        return ua.split(' ').pop().indexOf('Ch') > -1;
+    }
+
+    function getOsNameVersion(uaData) {
+        const name = uaData.os.name;
+        const version = uaData.os.version;
+        return version ? `${name} ${version}` : name;
+    }
+    
+    function getBrowserNameVersion(uaData) {
+        let name = uaData.browser.name;
+        let version = uaData.browser.version;
+        if (name === 'Chrome' && isYandexBrowser(uaData.ua)) {
+            name = 'Yandex';
+            version = '';
+        }
+        return version ? `${name} ${version}` : name;
+    }
+
     function getOsIcon(uaData) {
         const win8Icon = 'https://i.imgur.com/OC1xkLD.png';
         const winIcon = 'https://i.imgur.com/o08ewuG.png';
@@ -198,17 +223,8 @@
                 return null;
         }
     }
-
+    
     function getBrowserIcon(uaData) {
-        // some user agents are truncated
-        function isYandexBrowser(ua) {
-            return ua.split(' ').pop().indexOf('Ya') > -1;
-        }
-
-        function isChrome(ua) {
-            return ua.split(' ').pop().indexOf('Ch') > -1;
-        }
-
         function getIconId() {
             switch (uaData.browser.name.toLowerCase()) {
                 case 'firefox':
@@ -305,8 +321,8 @@
         appendLine(onlineUserInfoContainer, 'User-Agent', '<span id="parsedUa"></span>' + userAgent);
         parseUserAgent(userAgent, function (uaData) {
             const container = $('#parsedUa');
-            container.html(`${getImgHtml(getDeviceIcon(uaData), 16, 16)} ${getImgHtml(getOsIcon(uaData), 16, 16)} ${uaData.os.name} ${uaData.os.version},
-                            ${getImgHtml(getBrowserIcon(uaData), 16, 16)} ${uaData.browser.name} ${uaData.browser.version}<br/>`);
+            container.html(`${getImgHtml(getDeviceIcon(uaData), 16, 16)} ${getImgHtml(getOsIcon(uaData), 16, 16)} ${getOsNameVersion(uaData)},
+                            ${getImgHtml(getBrowserIcon(uaData), 16, 16)} ${getBrowserNameVersion(uaData)}<br/>`);
         });
         appendLine(onlineUserInfoContainer, 'IP адрес', ip);
         if (host) {
