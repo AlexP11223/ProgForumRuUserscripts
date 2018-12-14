@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.8
+// @version      0.9
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      http://programmersforum.ru/postings.php?do=getip*
@@ -37,7 +37,7 @@
     function requestIpApi(ip, success, error) {
         getJson(`http://ip-api.com/json/${ip}`, function (data) {
                 if (data.status === 'success') {
-                    success({country: data.country, region: data.regionName, city: data.city, isp: data.isp});
+                    success({country: data.country, countryCode: data.countryCode.toLowerCase(), region: data.regionName, city: data.city, isp: data.isp});
                 } else {
                     error(`API error ${data.message}`);
                 }
@@ -47,7 +47,7 @@
 
     function requestIpstack(ip, success, error) {
         getJson(`http://api.ipstack.com/${ip}?access_key=${IPSTACK_API_KEY}`, function (data) {
-                success({country: data.country_name, region: data.region_name, city: data.city});
+                success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region_name, city: data.city});
             },
             error);
     }
@@ -117,7 +117,8 @@
     }
 
     function formatGeoipData(data) {
-        let result = `${data.country}, ${data.region}, ${data.city}`;
+        const countryFlagUrl = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/flags/4x3/${data.countryCode}.svg`;
+        let result = `${getImgHtml(countryFlagUrl, 16, 12)} ${data.country}, ${data.region}, ${data.city}`;
         if (data.isp) {
             result += ` (провайдер ${data.isp})`;
         }
@@ -142,7 +143,7 @@
         });
     }
 
-    // some user agents are truncated
+    // some user-agents are truncated
     function isYandexBrowser(ua) {
         return ua.split(' ').pop().indexOf('Ya') > -1;
     }
@@ -278,7 +279,7 @@
     function getImgHtml(url, width, height) {
         if (!url)
             return '';
-        return `<img src="${url}" height="${width}" width="${height}"/>`
+        return `<img src="${url}" height="${width}" width="${height}" style="vertical-align: middle;"/>`
     }
 
     const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
