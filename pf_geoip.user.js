@@ -85,13 +85,13 @@
                 'do': 'resolveip',
                 'ajax': 1,
                 'ipaddress': ip
-            }, function (result) {
+            }, function(result) {
                 const host = $(result).text();
                 success(ua, ip, host, time);
-            }).fail(function (request) {
+            }).fail(function() {
                 success(ua, ip, null, time);
             });
-        }).fail(function (request) {
+        }).fail(function(request) {
             error(`HTTP error ${request.status} ${request.statusText}`);
         });
     }
@@ -111,7 +111,7 @@
             const userId = query['u'];
 
             loadOnlineInfoForUser(userId, success, error);
-        }).fail(function (request) {
+        }).fail(function(request) {
             error(`HTTP error ${request.status} ${request.statusText}`);
         });
     }
@@ -282,14 +282,6 @@
         return `<img src="${url}" height="${width}" width="${height}" style="vertical-align: middle;"/>`
     }
 
-    const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
-    if (!ipElement)
-        return;
-
-    const ip = ipElement.innerText;
-
-    const container = ipElement.parentNode;
-
     function elementFromString(html) {
         const range = document.createRange();
         return range.createContextualFragment(html);
@@ -298,6 +290,14 @@
     function appendLine(parent, name, content) {
         parent.appendChild(elementFromString(`<div>${name}: <strong>${content}</strong></div>`));
     }
+
+    const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
+    if (!ipElement)
+        return;
+
+    const ip = ipElement.innerText;
+
+    const container = ipElement.parentNode;
 
     container.appendChild(elementFromString('<div id="postGeo"></div>'));
     container.appendChild(elementFromString('<h4 style="margin-top: 20px; margin-bottom: 0; font-weight: normal">Текущие данные<span id="onlineTime"></span>:</h4><div id="onlineUserInfo"></div>'));
