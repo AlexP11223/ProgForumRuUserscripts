@@ -145,17 +145,17 @@
 
     // some user-agents are truncated
     function isYandexBrowser(ua) {
-        return ua.split(' ').pop().indexOf('Ya') > -1;
+        return ua.split(' ').pop().indexOf('Ya') === 0;
     }
 
     function isChrome(ua) {
-        return ua.split(' ').pop().indexOf('Ch') > -1;
+        return ua.split(' ').pop().indexOf('Ch') === 0;
     }
 
     function getOsNameVersion(uaData) {
         const name = uaData.os.name;
         const version = uaData.os.version;
-        return version ? `${name} ${version}` : name;
+        return [name, version].join(' ').trim();
     }
     
     function getBrowserNameVersion(uaData) {
@@ -165,10 +165,13 @@
             name = 'Yandex';
             version = '';
         }
-        return version ? `${name} ${version}` : name;
+        return [name, version].join(' ').trim();
     }
 
     function getOsIcon(uaData) {
+        if (!uaData.os.name)
+            return null;
+
         const win8Icon = 'https://i.imgur.com/OC1xkLD.png';
         const winIcon = 'https://i.imgur.com/o08ewuG.png';
         const linuxIcon = 'https://i.imgur.com/I1JBl7R.png';
@@ -227,6 +230,9 @@
     
     function getBrowserIcon(uaData) {
         function getIconId() {
+            if (!uaData.browser.name)
+                return null;
+
             switch (uaData.browser.name.toLowerCase()) {
                 case 'firefox':
                 case 'iceweasel':
