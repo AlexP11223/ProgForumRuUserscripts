@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      0.9
+// @version      1.0
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
-// @include      http://programmersforum.ru/postings.php?do=getip*
-// @include      http://www.programmersforum.ru/postings.php?do=getip*
+// @include      *programmersforum.ru/postings.php?do=getip*
+// @include      *programmersforum.ru/online.php?*ua=1*
+// @include      *programmersforum.ru
+// @include      *programmersforum.ru/
+// @include      *programmersforum.ru/index.php
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_geoip.user.js
 // ==/UserScript==
@@ -57,6 +60,11 @@
         return m ? m[1] : null;
     }
 
+    function getUserAgent(ipUaCell) {
+        const cellHtml = $(ipUaCell).html();
+        return cellHtml.substr(cellHtml.indexOf('<br>') + 4).trim();
+    }
+
     function loadOnlineInfoForUser(userId, success, error) {
         $.get('http://www.programmersforum.ru/online.php?s=&sortfield=time&sortorder=desc&who=members&ua=1&pp=50', function (html) {
             const doc = $(html);
@@ -68,9 +76,9 @@
 
             const row = userNode.closest('tr');
             const ipResolveLink = row.find('a[id^="resolveip"]');
-            const ipCellHtml = ipResolveLink.parent().html();
+            const ipUaCell = ipResolveLink.parent();
 
-            const ua = ipCellHtml.substr(ipCellHtml.indexOf('<br>') + 4).trim();
+            const ua = getUserAgent(ipUaCell);
             const ip = ipResolveLink.text().trim();
 
             const time = row.find('.time').html();
@@ -282,6 +290,15 @@
         return id ? `https://cdnjs.cloudflare.com/ajax/libs/browser-logos/46.1.0/${id}_32x32.png` : null;
     }
 
+    function getParsedUserAgentLineHtml(uaData) {
+        return [
+            `${getImgHtml(getDeviceIcon(uaData), 16, 16)} ${getImgHtml(getOsIcon(uaData), 16, 16)} ${getOsNameVersion(uaData)}`,
+            `${getImgHtml(getBrowserIcon(uaData), 16, 16)} ${getBrowserNameVersion(uaData)}`]
+            .map(s => s.trim())
+            .filter(Boolean)
+            .join(', ');
+    }
+
     function getImgHtml(url, width, height) {
         if (!url)
             return '';
@@ -297,57 +314,91 @@
         parent.appendChild(elementFromString(`<div>${name}: <strong>${content}</strong></div>`));
     }
 
-    const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
-    if (!ipElement)
-        return;
+    function handleUserIpPage() {
+        const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
+        if (!ipElement)
+            return;
 
-    const ip = ipElement.innerText;
+        const ip = ipElement.innerText;
 
-    const container = ipElement.parentNode;
+        const container = ipElement.parentNode;
 
-    container.appendChild(elementFromString('<div id="postGeo"></div>'));
-    container.appendChild(elementFromString('<h4 style="margin-top: 20px; margin-bottom: 0; font-weight: normal">Текущие данные<span id="onlineTime"></span>:</h4><div id="onlineUserInfo"></div>'));
+        container.appendChild(elementFromString('<div id="postGeo"></div>'));
+        container.appendChild(elementFromString('<h4 style="margin-top: 20px; margin-bottom: 0; font-weight: normal">Текущие данные<span id="onlineTime"></span>:</h4><div id="onlineUserInfo"></div>'));
 
-    const postUserInfoContainer = $('#postGeo')[0];
-    const onlineUserInfoContainer = $('#onlineUserInfo')[0];
-
-    requestIpApi(ip, function (data) {
-        appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
-    }, function (error) {
-        appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
-    });
-
-    requestIpstack(ip, function (data) {
-        appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
-    }, function (error) {
-        appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
-    });
-
-    loadOnlineInfo(function (userAgent, ip, host, time) {
-        $('#onlineTime').html(` (<strong>${time}</strong>)`);
-        appendLine(onlineUserInfoContainer, 'User-Agent', '<span id="parsedUa"></span>' + userAgent);
-        parseUserAgent(userAgent, function (uaData) {
-            const container = $('#parsedUa');
-            container.html(`${getImgHtml(getDeviceIcon(uaData), 16, 16)} ${getImgHtml(getOsIcon(uaData), 16, 16)} ${getOsNameVersion(uaData)},
-                            ${getImgHtml(getBrowserIcon(uaData), 16, 16)} ${getBrowserNameVersion(uaData)}<br/>`);
-        });
-        appendLine(onlineUserInfoContainer, 'IP адрес', ip);
-        if (host) {
-            appendLine(onlineUserInfoContainer, 'Хост', host);
-        }
+        const postUserInfoContainer = $('#postGeo')[0];
+        const onlineUserInfoContainer = $('#onlineUserInfo')[0];
 
         requestIpApi(ip, function (data) {
-            appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
+            appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
         }, function (error) {
-            appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
+            appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
         });
 
         requestIpstack(ip, function (data) {
-            appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
+            appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
         }, function (error) {
-            appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
+            appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
         });
-    }, function (error) {
-        onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
-    });
+
+        loadOnlineInfo(function (userAgent, ip, host, time) {
+            $('#onlineTime').html(` (<strong>${time}</strong>)`);
+            appendLine(onlineUserInfoContainer, 'User-Agent', '<span id="parsedUa"></span>' + userAgent);
+            parseUserAgent(userAgent, function (uaData) {
+                const parsedUaHtml = getParsedUserAgentLineHtml(uaData);
+                if (parsedUaHtml) {
+                    const container = $('#parsedUa');
+                    container.html(parsedUaHtml + '<br/>');
+                }
+            });
+            appendLine(onlineUserInfoContainer, 'IP адрес', ip);
+            if (host) {
+                appendLine(onlineUserInfoContainer, 'Хост', host);
+            }
+
+            requestIpApi(ip, function (data) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
+            }, function (error) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
+            });
+
+            requestIpstack(ip, function (data) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
+            }, function (error) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
+            });
+        }, function (error) {
+            onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
+        });
+    }
+
+    function handleUserListPage() {
+        const ipUaCells = $('#woltable').find('tr a[id^="resolveip"]').parent();
+        if (!ipUaCells.length)
+            return;
+
+        ipUaCells.each(function (i, ipUaCell) {
+            const ipEndNode = $(ipUaCell).find('br');
+            const userAgent = getUserAgent(ipUaCell);
+            parseUserAgent(userAgent, function (uaData) {
+                const parsedUaHtml = getParsedUserAgentLineHtml(uaData);
+                if (parsedUaHtml) {
+                    $(parsedUaHtml + '<br/>').insertAfter(ipEndNode);
+                }
+            });
+        })
+
+    }
+
+    if (window.location.pathname === '/postings.php' && window.location.search.indexOf('do=getip') > 0) {
+        handleUserIpPage();
+    } else if (window.location.pathname === '/online.php') {
+        handleUserListPage();
+    } else {
+        const userListLink = $('a[href$="online.php"]');
+        if (userListLink.length) {
+            userListLink.attr('href', userListLink.attr('href') + '?s=&sortfield=time&sortorder=desc&who=all&ua=1&pp=50');
+        }
+    }
+
 })();
