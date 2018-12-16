@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.0
+// @version      1.1
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -314,6 +314,10 @@
         parent.appendChild(elementFromString(`<div>${name}: <strong>${content}</strong></div>`));
     }
 
+    function appendLineSimple(parent, name, content) {
+        parent.appendChild(elementFromString(`<div>${name}: ${content}</div>`));
+    }
+
     function handleUserIpPage() {
         const ipElement = window.document.querySelector('.panelsurround div.panel div div strong');
         if (!ipElement)
@@ -379,6 +383,7 @@
 
         ipUaCells.each(function (i, ipUaCell) {
             const ipEndNode = $(ipUaCell).find('br');
+
             const userAgent = getUserAgent(ipUaCell);
             parseUserAgent(userAgent, function (uaData) {
                 const parsedUaHtml = getParsedUserAgentLineHtml(uaData);
@@ -386,8 +391,28 @@
                     $(parsedUaHtml + '<br/>').insertAfter(ipEndNode);
                 }
             });
-        })
 
+            const ip = $(ipUaCell).find('a[id^="resolveip"]').text().trim();
+
+            const geoipLink = $(`<a title="Определить месторасположение" href="javascript:void(0)" style="float: right;">${getImgHtml('https://i.imgur.com/hzmANSi.png', 16, 16)}</a>`)
+                .insertBefore(ipEndNode);
+            geoipLink.click(function () {
+                const container = $('<div></div>').replaceAll(geoipLink)[0];
+                ipEndNode.hide();
+
+                requestIpApi(ip, function (data) {
+                    appendLineSimple(container, 'ip-api.com', formatGeoipData(data));
+                }, function (error) {
+                    appendLineSimple(container, 'ip-api.com', formatError(error));
+                });
+
+                requestIpstack(ip, function (data) {
+                    appendLineSimple(container, 'ipstack.com', formatGeoipData(data));
+                }, function (error) {
+                    appendLineSimple(container, 'ipstack.com', formatError(error));
+                });
+            });
+        })
     }
 
     if (window.location.pathname === '/postings.php' && window.location.search.indexOf('do=getip') > 0) {
@@ -400,5 +425,4 @@
             userListLink.attr('href', userListLink.attr('href') + '?s=&sortfield=time&sortorder=desc&who=all&ua=1&pp=50');
         }
     }
-
 })();
