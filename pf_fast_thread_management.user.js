@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.12
+// @version      0.13
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
 // @include      http://programmersforum.ru/showthread.php*
@@ -85,15 +85,21 @@
     var quickMoveForums = $.grep([
         { id: 31, buttonText: 'Помощь студентам', period: 1 },
         { id: 29, buttonText: 'Фриланс', period: 7 },
-        { id: 30, buttonText: 'Работу', period: 7 },
+        { id: 30, buttonText: 'Вакансии', period: 7 },
+        { id: 108, buttonText: 'Ищу работу', period: 7 },
         { id: 26, buttonText: 'Общение', period: 7 },
+        { id: 37, buttonText: 'О форуме', period: 7 },
         { id: 50, buttonText: 'Программирование', period: 7 },
         { id: 80, buttonText: 'Web', period: 7 },
         { id: 46, buttonText: 'Железо', period: 7 },
         { id: 61, buttonText: 'Windows', period: 7 },
+        { id: 62, buttonText: 'Linux', period: 7 },
         { id: 2, buttonText: 'Delphi', period: 7 },
         { id: 20, buttonText: 'Excel', period: 7 },
         { id: 14, buttonText: 'C++', period: 7 },
+        { id: 11, buttonText: 'Java', period: 7 },
+        { id: 59, buttonText: 'C#', period: 7 },
+        { id: 110, buttonText: 'Python', period: 7 },
     ], function (item) {
         return item.id != forumId;
     });
