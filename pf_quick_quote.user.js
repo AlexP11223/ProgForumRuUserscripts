@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         ProgrammersForumQuickQuote
 // @namespace    http://programmersforum.ru/
-// @version      0.70
+// @version      0.71
 // @description  adds a button to quote selected text, also changes the reply/quote button to not reload page
 // @author       Alex P
-// @include      http://programmersforum.ru/*
-// @include      http://www.programmersforum.ru/*
+// @include      *programmersforum.ru/*
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_quick_quote.user.js

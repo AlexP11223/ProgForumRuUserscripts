@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         ProgrammersForum Fast Thread Management
 // @namespace    http://programmersforum.ru/
-// @version      0.13
+// @version      0.14
 // @description  converts thread management radio buttons into links/buttons that work without click on the form submit button
 // @author       Alex P
-// @include      http://programmersforum.ru/showthread.php*
-// @include      http://www.programmersforum.ru/showthread.php*
+// @include      *programmersforum.ru/showthread.php*
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_fast_thread_management.user.js
 // ==/UserScript==

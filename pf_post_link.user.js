@@ -1,12 +1,10 @@
 // ==UserScript==
 // @name         ProgrammersForumPostLink
 // @namespace    http://programmersforum.ru/
-// @version      0.21
+// @version      0.22
 // @description  adds button to copy post url
 // @author       Alex P
-// @include      http://programmersforum.ru/*
-// @include      http://www.programmersforum.ru/*
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
+// @include      *programmersforum.ru/*
 // @grant        GM_setClipboard
 // @grant        GM_addStyle
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_post_link.user.js

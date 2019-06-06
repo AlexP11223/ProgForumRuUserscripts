@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         ProgrammersForum Code Highlighter
 // @namespace    http://programmersforum.ru/
-// @version      0.2
+// @version      0.21
 // @description  Limits code language autodetection depending on forum
 // @author       Alex P
-// @include      http://programmersforum.ru/*
-// @include      http://www.programmersforum.ru/*
+// @include      *programmersforum.ru/*
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_code_highlighter.user.js
 // ==/UserScript==

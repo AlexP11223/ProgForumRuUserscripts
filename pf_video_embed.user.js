@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         ProgrammersForumVideoEmbed
 // @namespace    http://programmersforum.ru/
-// @version      0.51
+// @version      0.52
 // @description  replaces youtube and coub links with embedded video player frames
 // @author       Alex P
-// @include      http://programmersforum.ru/*
-// @include      http://www.programmersforum.ru/*
+// @include      *programmersforum.ru/*
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_video_embed.user.js
