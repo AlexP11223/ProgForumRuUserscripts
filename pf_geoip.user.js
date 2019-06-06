@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.1
+// @version      1.2
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -66,7 +66,7 @@
     }
 
     function loadOnlineInfoForUser(userId, success, error) {
-        $.get('http://www.programmersforum.ru/online.php?s=&sortfield=time&sortorder=desc&who=members&ua=1&pp=50', function (html) {
+        $.get('/online.php?s=&sortfield=time&sortorder=desc&who=members&ua=1&pp=50', function (html) {
             const doc = $(html);
             const userNode = doc.find(`#woltable a[href="member.php?u=${userId}"]`);
             if (!userNode.length) {
@@ -112,7 +112,7 @@
         }
         const postId = parseInt(urlQuery['p']);
 
-        $.get(`http://www.programmersforum.ru/showpost.php?p=${postId}`, function (html) {
+        $.get(`/showpost.php?p=${postId}`, function (html) {
             const doc = $(html);
             const href = doc.find('.bigusername').attr('href');
             const query = parseUrlQuery(href.substr(href.indexOf('?') + 1));
