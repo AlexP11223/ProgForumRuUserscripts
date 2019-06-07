@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.2
+// @version      1.3
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -17,6 +17,7 @@
     'use strict';
 
     const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
+    const IPDATA_API_KEY = 'c8648f40fbd7bfcab452647636b8dd6344d430acc54019cacd6b0f34';
 
     function getJson(url, success, error) {
         $.getJSON(url, function (data) {
@@ -51,6 +52,13 @@
     function requestIpstack(ip, success, error) {
         getJson(`http://api.ipstack.com/${ip}?access_key=${IPSTACK_API_KEY}`, function (data) {
                 success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region_name, city: data.city});
+            },
+            error);
+    }
+
+    function requestIpData(ip, success, error) {
+        getJson(`https://api.ipdata.co/${ip}?api-key=${IPDATA_API_KEY}`, function (data) {
+                success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region, city: data.city, isp: data.organisation});
             },
             error);
     }
@@ -333,16 +341,24 @@
         const postUserInfoContainer = $('#postGeo')[0];
         const onlineUserInfoContainer = $('#onlineUserInfo')[0];
 
-        requestIpApi(ip, function (data) {
-            appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
-        }, function (error) {
-            appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
-        });
+        // no HTTPS, cannot use on a HTTPS website
+        // requestIpApi(ip, function (data) {
+        //     appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
+        // }, function (error) {
+        //     appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
+        // });
 
-        requestIpstack(ip, function (data) {
-            appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
+        // HTTPS only in the paid tiers
+        // requestIpstack(ip, function (data) {
+        //     appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
+        // }, function (error) {
+        //     appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
+        // });
+
+        requestIpData(ip, function (data) {
+            appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatGeoipData(data));
         }, function (error) {
-            appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
+            appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
         });
 
         loadOnlineInfo(function (userAgent, ip, host, time) {
@@ -360,16 +376,10 @@
                 appendLine(onlineUserInfoContainer, 'Хост', host);
             }
 
-            requestIpApi(ip, function (data) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
+            requestIpData(ip, function (data) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatGeoipData(data));
             }, function (error) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
-            });
-
-            requestIpstack(ip, function (data) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
-            }, function (error) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
+                appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
             });
         }, function (error) {
             onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
@@ -400,16 +410,10 @@
                 const container = $('<div></div>').replaceAll(geoipLink)[0];
                 ipEndNode.hide();
 
-                requestIpApi(ip, function (data) {
-                    appendLineSimple(container, 'ip-api.com', formatGeoipData(data));
+                requestIpData(ip, function (data) {
+                    appendLineSimple(container, 'ipdata.co', formatGeoipData(data));
                 }, function (error) {
-                    appendLineSimple(container, 'ip-api.com', formatError(error));
-                });
-
-                requestIpstack(ip, function (data) {
-                    appendLineSimple(container, 'ipstack.com', formatGeoipData(data));
-                }, function (error) {
-                    appendLineSimple(container, 'ipstack.com', formatError(error));
+                    appendLineSimple(container, 'ipdata.co', formatError(error));
                 });
             });
         })
