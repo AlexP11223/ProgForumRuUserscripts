@@ -133,27 +133,45 @@ var searchlink = new function() {
         }
     }
 
+    function onOpenFormLinkClicked(e, sender) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var table = sender.closest('table');
+        var form = table.find('form');
+        if (!form.length) {
+            form = table.closest('form');
+        }
+
+        var url = self.createUrl(form, true);
+
+        window.location.href = url;
+    }
+
     function doInit() {
         var quickSearchTables = $('#navbar_search_menu, #threadsearch_menu, #header_right_cell').find('tbody');
         var mainSearchTable = $('input[name="dosearch"]').parent().parent();
 
         var quickSearchCopyLinks = $(
-            '<tr class="search-copy-link"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)"">Скопировать ссылку</a></td></tr>')
+            '<tr class="search-copy-link"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)">Скопировать ссылку на результат поиска</a></td></tr>')
             .appendTo(quickSearchTables);
         var quickSearchFormCopyLinks = $(
-            '<tr class="search-copy-form-link"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)"">Скопировать ссылку на форму</a></td></tr>')
+            '<tr class="search-copy-form-link"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)">Скопировать ссылку на расширенную форму поиска</a></td></tr>')
+            .appendTo(quickSearchTables);
+        var quickSearchFormOpenLinks = $(
+            '<tr class="search-open-form"><td class="vbmenu_option vbmenu_option_alink"><a href="javascript:void(0)">Создать сложный вопрос в расширенной форме поиска</a></td></tr>')
             .appendTo(quickSearchTables);
 
         var mainSearchLinksBlock = $('<div style="margin-top:8px"></div>').appendTo(mainSearchTable);
 
         var mainSearchCopyLink = $(
-            '<div><a class="main-search-copy-link" href="javascript:void(0)"">Скопировать ссылку</a></div>')
+            '<div><a class="main-search-copy-link" href="javascript:void(0)">Скопировать ссылку на результат поиска</a></div>')
             .appendTo(mainSearchLinksBlock);
         var mainSearchFormCopyLink = $(
-            '<div><a class="main-search-copy-form-link" href="javascript:void(0)"">Скопировать ссылку на форму</a></div>')
+            '<div><a class="main-search-copy-form-link" href="javascript:void(0)">Скопировать ссылку на расширенную форму поиска</a></div>')
             .appendTo(mainSearchLinksBlock);
 
-        $.merge(quickSearchCopyLinks, quickSearchFormCopyLinks).hover(
+        $.merge(quickSearchCopyLinks, quickSearchFormCopyLinks, quickSearchFormOpenLinks).hover(
             // simulate default vBulletin behavior
             function() {
                 $(this).children().addClass('vbmenu_hilite vbmenu_hilite_alink');
@@ -170,9 +188,12 @@ var searchlink = new function() {
         $.merge(quickSearchFormCopyLinks, mainSearchFormCopyLink).click(function (e) {
             onLinkClicked(e, $(this), true);
         });
+        quickSearchFormOpenLinks.click(function (e) {
+            onOpenFormLinkClicked(e, $(this));
+        });
 
         // hide buttons for header search box until focus, to avoid "jumping" on each page load
-        var headerSearchCopyLinks = $('#header_right_cell').find('.search-copy-link, .search-copy-form-link');
+        var headerSearchCopyLinks = $('#header_right_cell').find('.search-copy-link, .search-copy-form-link, .search-open-form');
         headerSearchCopyLinks.hide(0);
         $('#header_right_cell').find('input').focus(function () {
             headerSearchCopyLinks.show();
