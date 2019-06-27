@@ -184,6 +184,8 @@ var searchlink = new function() {
             return;
         window.searchLinkInitialized = true;
 
-        doInit();
+        $(function() {
+            doInit();
+        });
     };
 };
