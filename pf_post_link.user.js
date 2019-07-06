@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumPostLink
 // @namespace    http://programmersforum.ru/
-// @version      0.22
+// @version      1.0
 // @description  adds button to copy post url
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -19,18 +19,20 @@
 
     GM_addStyle('.link-popup { font-weight: bold; margin-right: 8px; }');
 
-    $.each($('[id^="postcount"]'), function(i, oldPostLink) {
-        var id = $(oldPostLink).attr('id').replace('postcount', '');
-        var href = '#post' + id;
-        var container = $(oldPostLink).parent();
+    const BASE_URL = 'https://programmersforum.ru/';
 
-        var postLink = $('<a href="' + href + '">ссылка</a>').prependTo(container);
-        postLink.click(function() {
-            var url = window.location.href.split("#")[0];
+    $.each($('a[id^="postcount"]'), (i, oldPostLink) => {
+        const href = $(oldPostLink).attr('href');
 
-            GM_setClipboard(url + href);
+        const container = $(oldPostLink).parent();
 
-            var popup = $('<span class="link-popup" style="display: none;">ссылка скопирована в буфер обмена</span>').prependTo(container);
+        const postLink = $('<a href="' + href + '">ссылка</a>').prependTo(container);
+        postLink.click(e => {
+            e.preventDefault();
+
+            GM_setClipboard(BASE_URL + href);
+
+            const popup = $('<span class="link-popup" style="display: none;">ссылка скопирована в буфер обмена</span>').prependTo(container);
             popup.fadeIn();
             popup.delay(2500).fadeOut();
         });
