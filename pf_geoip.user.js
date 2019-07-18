@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.3
+// @version      1.4
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -59,6 +59,13 @@
     function requestIpData(ip, success, error) {
         getJson(`https://api.ipdata.co/${ip}?api-key=${IPDATA_API_KEY}`, function (data) {
                 success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region, city: data.city, isp: data.organisation});
+            },
+            error);
+    }
+
+    function requestDbIp(ip, success, error) {
+        getJson(`http://api.db-ip.com/v2/free/${ip}`, function (data) {
+                success({country: data.countryName, countryCode: data.countryCode.toLowerCase(), region: data.stateProv, city: data.city});
             },
             error);
     }
@@ -381,6 +388,12 @@
             }, function (error) {
                 appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
             });
+
+            requestDbIp(ip, function (data) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (db-ip.com)', formatGeoipData(data));
+            }, function (error) {
+                appendLine(onlineUserInfoContainer, 'Месторасположение (db-ip.com)', formatError(error));
+            });
         }, function (error) {
             onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
         });
@@ -414,6 +427,12 @@
                     appendLineSimple(container, 'ipdata.co', formatGeoipData(data));
                 }, function (error) {
                     appendLineSimple(container, 'ipdata.co', formatError(error));
+                });
+
+                requestDbIp(ip, function (data) {
+                    appendLineSimple(container, 'db-ip.com', formatGeoipData(data));
+                }, function (error) {
+                    appendLineSimple(container, 'db-ip.com', formatError(error));
                 });
             });
         })
