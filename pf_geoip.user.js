@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.4
+// @version      1.5
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -64,7 +64,7 @@
     }
 
     function requestDbIp(ip, success, error) {
-        getJson(`http://api.db-ip.com/v2/free/${ip}`, function (data) {
+        getJson(`https://api.db-ip.com/v2/free/${ip}`, function (data) {
                 success({country: data.countryName, countryCode: data.countryCode.toLowerCase(), region: data.stateProv, city: data.city});
             },
             error);
@@ -366,6 +366,12 @@
             appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatGeoipData(data));
         }, function (error) {
             appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
+        });
+
+        requestDbIp(ip, function (data) {
+            appendLine(postUserInfoContainer, 'Месторасположение (db-ip.com)', formatGeoipData(data));
+        }, function (error) {
+            appendLine(postUserInfoContainer, 'Месторасположение (db-ip.com)', formatError(error));
         });
 
         loadOnlineInfo(function (userAgent, ip, host, time) {
