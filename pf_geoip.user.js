@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.5
+// @version      1.6
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -59,13 +59,6 @@
     function requestIpData(ip, success, error) {
         getJson(`https://api.ipdata.co/${ip}?api-key=${IPDATA_API_KEY}`, function (data) {
                 success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region, city: data.city, isp: data.organisation});
-            },
-            error);
-    }
-
-    function requestDbIp(ip, success, error) {
-        getJson(`https://api.db-ip.com/v2/free/${ip}`, function (data) {
-                success({country: data.countryName, countryCode: data.countryCode.toLowerCase(), region: data.stateProv, city: data.city});
             },
             error);
     }
@@ -368,12 +361,6 @@
             appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
         });
 
-        requestDbIp(ip, function (data) {
-            appendLine(postUserInfoContainer, 'Месторасположение (db-ip.com)', formatGeoipData(data));
-        }, function (error) {
-            appendLine(postUserInfoContainer, 'Месторасположение (db-ip.com)', formatError(error));
-        });
-
         loadOnlineInfo(function (userAgent, ip, host, time) {
             $('#onlineTime').html(` (<strong>${time}</strong>)`);
             appendLine(onlineUserInfoContainer, 'User-Agent', '<span id="parsedUa"></span>' + userAgent);
@@ -393,12 +380,6 @@
                 appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatGeoipData(data));
             }, function (error) {
                 appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
-            });
-
-            requestDbIp(ip, function (data) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (db-ip.com)', formatGeoipData(data));
-            }, function (error) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (db-ip.com)', formatError(error));
             });
         }, function (error) {
             onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
@@ -433,12 +414,6 @@
                     appendLineSimple(container, 'ipdata.co', formatGeoipData(data));
                 }, function (error) {
                     appendLineSimple(container, 'ipdata.co', formatError(error));
-                });
-
-                requestDbIp(ip, function (data) {
-                    appendLineSimple(container, 'db-ip.com', formatGeoipData(data));
-                }, function (error) {
-                    appendLineSimple(container, 'db-ip.com', formatError(error));
                 });
             });
         })
