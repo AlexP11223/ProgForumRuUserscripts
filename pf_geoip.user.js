@@ -16,7 +16,7 @@
 (function () {
     'use strict';
 
-    const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
+    //const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
     const IPDATA_API_KEY = 'c8648f40fbd7bfcab452647636b8dd6344d430acc54019cacd6b0f34';
 
     function getJson(url, success, error) {
@@ -38,23 +38,25 @@
         return dict;
     }
 
-    function requestIpApi(ip, success, error) {
-        getJson(`http://ip-api.com/json/${ip}`, function (data) {
-                if (data.status === 'success') {
-                    success({country: data.country, countryCode: data.countryCode.toLowerCase(), region: data.regionName, city: data.city, isp: data.isp});
-                } else {
-                    error(`API error ${data.message}`);
-                }
-            },
-            error);
-    }
+    // no HTTPS, cannot use on a HTTPS website
+    // function requestIpApi(ip, success, error) {
+    //     getJson(`http://ip-api.com/json/${ip}`, function (data) {
+    //             if (data.status === 'success') {
+    //                 success({country: data.country, countryCode: data.countryCode.toLowerCase(), region: data.regionName, city: data.city, isp: data.isp});
+    //             } else {
+    //                 error(`API error ${data.message}`);
+    //             }
+    //         },
+    //         error);
+    // }
 
-    function requestIpstack(ip, success, error) {
-        getJson(`http://api.ipstack.com/${ip}?access_key=${IPSTACK_API_KEY}`, function (data) {
-                success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region_name, city: data.city});
-            },
-            error);
-    }
+    // HTTPS only in the paid tiers
+    // function requestIpstack(ip, success, error) {
+    //     getJson(`http://api.ipstack.com/${ip}?access_key=${IPSTACK_API_KEY}`, function (data) {
+    //             success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region_name, city: data.city});
+    //         },
+    //         error);
+    // }
 
     function requestIpData(ip, success, error) {
         getJson(`https://api.ipdata.co/${ip}?api-key=${IPDATA_API_KEY}`, function (data) {
@@ -62,6 +64,13 @@
             },
             error);
     }
+
+    const GEOIP_PROVIDERS = [
+        {
+            name: 'ipdata.co',
+            request: requestIpData
+        }
+    ];
 
     function getSecurityToken(html) {
         const m = html.match(/var SECURITYTOKEN = "(.+)"/);
@@ -341,24 +350,12 @@
         const postUserInfoContainer = $('#postGeo')[0];
         const onlineUserInfoContainer = $('#onlineUserInfo')[0];
 
-        // no HTTPS, cannot use on a HTTPS website
-        // requestIpApi(ip, function (data) {
-        //     appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatGeoipData(data));
-        // }, function (error) {
-        //     appendLine(postUserInfoContainer, 'Месторасположение (ip-api.com)', formatError(error));
-        // });
-
-        // HTTPS only in the paid tiers
-        // requestIpstack(ip, function (data) {
-        //     appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatGeoipData(data));
-        // }, function (error) {
-        //     appendLine(postUserInfoContainer, 'Месторасположение (ipstack.com)', formatError(error));
-        // });
-
-        requestIpData(ip, function (data) {
-            appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatGeoipData(data));
-        }, function (error) {
-            appendLine(postUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
+        GEOIP_PROVIDERS.forEach(function (provider) {
+            provider.request(ip, function (data) {
+                appendLine(postUserInfoContainer, `Месторасположение (${provider.name})`, formatGeoipData(data));
+            }, function (error) {
+                appendLine(postUserInfoContainer, `Месторасположение (${provider.name})`, formatError(error));
+            });
         });
 
         loadOnlineInfo(function (userAgent, ip, host, time) {
@@ -376,10 +373,12 @@
                 appendLine(onlineUserInfoContainer, 'Хост', host);
             }
 
-            requestIpData(ip, function (data) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatGeoipData(data));
-            }, function (error) {
-                appendLine(onlineUserInfoContainer, 'Месторасположение (ipdata.co)', formatError(error));
+            GEOIP_PROVIDERS.forEach(function (provider) {
+                provider.request(ip, function (data) {
+                    appendLine(onlineUserInfoContainer, `Месторасположение (${provider.name})`, formatGeoipData(data));
+                }, function (error) {
+                    appendLine(onlineUserInfoContainer, `Месторасположение (${provider.name})`, formatError(error));
+                });
             });
         }, function (error) {
             onlineUserInfoContainer.appendChild(elementFromString(`<div><strong>${formatError(error)}</strong></div>`));
@@ -410,10 +409,12 @@
                 const container = $('<div></div>').replaceAll(geoipLink)[0];
                 ipEndNode.hide();
 
-                requestIpData(ip, function (data) {
-                    appendLineSimple(container, 'ipdata.co', formatGeoipData(data));
-                }, function (error) {
-                    appendLineSimple(container, 'ipdata.co', formatError(error));
+                GEOIP_PROVIDERS.forEach(function (provider) {
+                    provider.request(ip, function (data) {
+                        appendLineSimple(container, `${provider.name}`, formatGeoipData(data));
+                    }, function (error) {
+                        appendLineSimple(container, `${provider.name}`, formatError(error));
+                    });
                 });
             });
         })
