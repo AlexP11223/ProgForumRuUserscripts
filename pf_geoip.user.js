@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.9
+// @version      1.10
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -16,8 +16,10 @@
 (function () {
     'use strict';
 
+    // free API keys
     //const IPSTACK_API_KEY = 'b890dc8f7bc14c40deb7af6a2f9be451';
     const IPDATA_API_KEY = 'c8648f40fbd7bfcab452647636b8dd6344d430acc54019cacd6b0f34';
+    const IPGEOLOCATION_API_KEY = '02accd26591949d7adad15565717a3c2';
 
     function getJson(url, success, error) {
         $.getJSON(url, function (data) {
@@ -87,6 +89,13 @@
             error);
     }
 
+    function requestIpGeoLocation(ip, success, error) {
+        getJson(`https://api.ipgeolocation.io/ipgeo?apiKey=${IPGEOLOCATION_API_KEY}&lang=ru&ip=${ip}`, function (data) {
+                success({country: data.country_name, countryCode: data.country_code2.toLowerCase(), region: data.state_prov, district: data.district, city: data.city, isp: data.isp});
+            },
+            error);
+    }
+
     const GEOIP_PROVIDERS = [
         {
             name: 'ipdata.co',
@@ -99,6 +108,10 @@
         {
             name: 'ipinfo.io',
             request: requestIpInfo
+        },
+        {
+            name: 'ipgeolocation.io',
+            request: requestIpGeoLocation
         },
     ];
 
@@ -173,7 +186,9 @@
 
     function formatGeoipData(data) {
         const countryFlagUrl = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/flags/4x3/${data.countryCode}.svg`;
-        let result = `${getImgHtml(countryFlagUrl, 16, 12)} ${data.country}, ${data.region}, ${data.city}`;
+        const locationParts = [data.country, data.region, data.district, data.city]
+            .filter(function (it) { return it; }); // filter nulls
+        let result = `${getImgHtml(countryFlagUrl, 16, 12)} ${locationParts.join(', ')}`;
         if (data.isp) {
             result += ` (провайдер ${data.isp})`;
         }
