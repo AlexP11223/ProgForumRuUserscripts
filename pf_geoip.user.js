@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.10
+// @version      1.11
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -62,7 +62,22 @@
 
     function requestIpData(ip, success, error) {
         getJson(`https://api.ipdata.co/${ip}?api-key=${IPDATA_API_KEY}`, function (data) {
-                success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region, city: data.city, isp: data.organisation});
+                let threat = null;
+                const threatData = data.threat;
+                if (threatData) {
+                    const activeThreats = Object.keys(threatData)
+                        .map(function (key) {
+                            return [key, threatData[key]];
+                        })
+                        .filter(function (it) {
+                            return it[1] && ['is_anonymous', 'is_threat'].indexOf(it[0]) < 0;
+                        })
+                        .map(function (it) {
+                            return it[0].replace(/is_/gi, '');
+                        });
+                    threat = activeThreats.join(', ');
+                }
+                success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.region, city: data.city, isp: data.organisation, threat: threat});
             },
             error);
     }
@@ -191,6 +206,9 @@
         let result = `${getImgHtml(countryFlagUrl, 16, 12)} ${locationParts.join(', ')}`;
         if (data.isp) {
             result += ` (провайдер ${data.isp})`;
+        }
+        if (data.threat) {
+            result += ` <img src="https://www.programmersforum.ru/images/1070/buttons/report.gif"/> <span style="color: red; font-weight: bold;">${data.threat}</span>`;
         }
         return result;
     }
