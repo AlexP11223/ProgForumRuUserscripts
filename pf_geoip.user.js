@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.11
+// @version      1.12
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -201,7 +201,7 @@
 
     function formatGeoipData(data) {
         const countryFlagUrl = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/flags/4x3/${data.countryCode}.svg`;
-        const locationParts = [data.country, data.region, data.district, data.city]
+        const locationParts = [data.country, data.region, data.city, data.district]
             .filter(function (it) { return it; }); // filter nulls
         let result = `${getImgHtml(countryFlagUrl, 16, 12)} ${locationParts.join(', ')}`;
         if (data.isp) {
