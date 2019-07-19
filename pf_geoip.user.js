@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForumGeoIp
 // @namespace    http://programmersforum.ru/
-// @version      1.8
+// @version      1.9
 // @description  adds country/city info on the page with user IP, as well as current user agent, IP for online user
 // @author       Alex P
 // @include      *programmersforum.ru/postings.php?do=getip*
@@ -65,16 +65,24 @@
             error);
     }
 
-    function requestIpApiCo(ip, success, error) {
-        getJson(`https://ipapi.co/${ip}/json/`, function (data) {
-                success({country: data.country_name, countryCode: data.country.toLowerCase(), region: data.region, city: data.city, isp: data.org});
-            },
-            error);
-    }
+    // looks the same as ipdata.co
+    // function requestIpApiCo(ip, success, error) {
+    //     getJson(`https://ipapi.co/${ip}/json/`, function (data) {
+    //             success({country: data.country_name, countryCode: data.country.toLowerCase(), region: data.region, city: data.city, isp: data.org});
+    //         },
+    //         error);
+    // }
 
     function requestIpInfo(ip, success, error) {
         getJson(`https://ipinfo.io/${ip}`, function (data) {
                 success({country: data.country, countryCode: data.country.toLowerCase(), region: data.region, city: data.city, isp: data.org});
+            },
+            error);
+    }
+
+    function requestGeoipDb(ip, success, error) {
+        getJson(`https://geoip-db.com/json/${ip}`, function (data) {
+                success({country: data.country_name, countryCode: data.country_code.toLowerCase(), region: data.state, city: data.city});
             },
             error);
     }
@@ -85,8 +93,8 @@
             request: requestIpData
         },
         {
-            name: 'ipapi.co',
-            request: requestIpApiCo
+            name: 'geoip-db.com',
+            request: requestGeoipDb
         },
         {
             name: 'ipinfo.io',
