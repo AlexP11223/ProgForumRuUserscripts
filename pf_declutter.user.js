@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hide logo, etc.
 // @namespace    programmersforum.ru
-// @version      1.2
+// @version      1.3
 // @description  hides the huge logo and other useless stuff
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -21,9 +21,13 @@
         document.head.appendChild(styleSheet);
     }
 
-    addStyle(`img[src="images/1070/misc/logo.gif"], #header_right_cell { 
-      display: none;
-    }`);
+    addStyle(`img[src="images/1070/misc/logo.gif"],
+                   #header_right_cell,
+                   div.page > div > b,
+                   div.page > div > b + br,
+                   div.page > div > center,
+                   div.page > div > center + br
+        { display: none; }`);
 
     document.addEventListener("DOMContentLoaded", () => {
         $('img[src="images/1070/misc/logo.gif"]')
