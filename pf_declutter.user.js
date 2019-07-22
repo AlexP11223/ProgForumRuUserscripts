@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Hide logo, etc.
+// @name         ProgrammersForum Hide logo, etc.
 // @namespace    programmersforum.ru
 // @version      1.3
 // @description  hides the huge logo and other useless stuff
