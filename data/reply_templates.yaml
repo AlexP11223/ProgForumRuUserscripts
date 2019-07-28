@@ -40,6 +40,11 @@ templates:
     content: |
       Пользуйтесь кнопкой Правка вместо нескольких сообщений подряд.
 
+  - name: Don't PM me
+    action: append
+    content: |
+      Зачем писать мне в ЛС? Отвечайте в теме.
+
   - name: separator
     id: sep
     hide: true
