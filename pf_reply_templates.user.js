@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Reply Templates
 // @namespace    programmersforum.ru
-// @version      2.0
-// @description
+// @version      2.1
+// @description  adds dialog with reply templates in all editors
 // @author       Alex P
 // @include      *programmersforum.ru/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js
@@ -218,23 +218,24 @@
 
         const form = $(`
 <div>
-    <div class="horizontal-group">
+    <form action="/update_reply_templates_url.js" method="post" class="horizontal-group">
         <input type="text" name="url" value="${getTemplatesSourceUrl()}"/>
-        <button data-action="download">Загрузить</button>
-    </div>
+        <button type="submit">Загрузить</button>
+    </form>
     <div style="height: 20px">
         <img style="display: none;" class="progress" src="https://www.programmersforum.ru/images/1070/misc/progress.gif" alt=""/>
     </div>
 </div>`);
 
-        form.find('button[data-action="download"]')
-            .click(() => {
-                const url = form.find('input[name="url"]').val();
-                saveTemplatesSourceUrl(url);
+        form.submit(e => {
+            e.preventDefault();
 
-                modal.close();
-                openTemplatesWindow(editor);
-            });
+            const url = form.find('input[name="url"]').val();
+            saveTemplatesSourceUrl(url);
+
+            modal.close();
+            openTemplatesWindow(editor);
+        });
 
         styleTemplatesForm(form);
 
