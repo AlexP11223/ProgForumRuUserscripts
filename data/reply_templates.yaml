@@ -1,0 +1,54 @@
+---
+templates:
+  - name: CODE FAQ
+    action: append
+    content: |
+      $sep$
+      [B][COLOR="Red"]Используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум.[/COLOR][URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
+
+  - name: Indent & CODE FAQ
+    action: append
+    content: |
+      $sep$
+      [B][COLOR="Red"]Форматируйте код и используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум. [/COLOR][URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
+
+  - name: No HELP
+    content: |
+      Вы не перепутали "помогите" и "сделайте за меня"?
+      $noSpoonfeeding$
+
+  - name: Not a homework solver
+    content: |
+      Тут не решатель задач.
+      $noSpoonfeeding$
+
+  - name: No spoonfeeding
+    id: noSpoonfeeding
+    content: |
+      Если кто-то просто решит за вас, это вряд ли поможет вам разобраться.
+
+      Назовите нормально тему, покажите свои наработки, конкретные вопросы и т.п.
+      http://www.programmersforum.ru/announcement.php?f=31
+
+      Или в раздел [URL="http://www.programmersforum.ru/forumdisplay.php?f=29"]Фриланс[/URL] если вы не хотите ничего делать, а ищете кого-то, кто выполнит ваши задачи за вознаграждение.
+
+  - name: Делись решением!
+    content: |
+      Если вы решили проблему, то расскажите, как вы это сделали. Это может быть полезно другим.
+
+  - name: Don't double post
+    content: |
+      Пользуйтесь кнопкой Правка вместо нескольких сообщений подряд.
+
+  - name: separator
+    id: sep
+    hide: true
+    content: |
+      [COLOR="Red"]______________________[/COLOR]
+
+  - name: Moderator's comment
+    action: append
+    content: |
+      $sep$[B][COLOR="Red"]
+
+      [/COLOR][/B]
