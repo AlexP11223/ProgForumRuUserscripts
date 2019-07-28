@@ -23,6 +23,12 @@
     // ===================================
     // <CSS>
 
+    function styleCustomControlsBar(controlsBar) {
+        controlsBar.css({
+            textAlign: 'left',
+        });
+    }
+
     function styleModal(modal) {
         modal.css({
             position: 'fixed',
@@ -279,6 +285,8 @@
                 .appendTo(customControlsBar)
                 .click(() => openTemplatesWindow(editor));
         }
+
+        styleCustomControlsBar(customControlsBar);
     }
 
     $('.vBulletin_editor').each((i, el) => addEditorControls($(el)));
