@@ -60,11 +60,15 @@
 
     function styleTemplatesList(templatesList) {
         templatesList.css({
+            display: 'flex',
+            flexWrap: 'wrap',
             padding: 0,
+            margin: '-10px',
             listStyleType: 'none',
         });
         templatesList.find('li').css({
-            margin: '10px 0',
+            margin: '10px',
+            width: 'calc(50% - 20px)',
         });
         templatesList.find('button').css({
             fontSize: '16pt',
