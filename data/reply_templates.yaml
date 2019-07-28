@@ -22,7 +22,7 @@ templates:
       Тут не решатель задач.
       $noSpoonfeeding$
 
-  - name: No spoonfeeding
+  - name: No spoon feeding
     id: noSpoonfeeding
     content: |
       Если кто-то просто решит за вас, это вряд ли поможет вам разобраться.
