@@ -4,13 +4,13 @@ templates:
     action: append
     content: |
       $sep$
-      [B][COLOR="Red"]Используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум.[/COLOR][URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
+      [B][COLOR="Red"]Используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум.[/COLOR] [URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
 
   - name: Indent & CODE FAQ
     action: append
     content: |
       $sep$
-      [B][COLOR="Red"]Форматируйте код и используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум. [/COLOR][URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
+      [B][COLOR="Red"]Форматируйте код и используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум.[/COLOR] [URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
 
   - name: No HELP
     content: |
@@ -36,6 +36,10 @@ templates:
     content: |
       Если вы решили проблему, то расскажите, как вы это сделали. Это может быть полезно другим.
 
+  - name: Don't cross post
+    content: |
+      Не создавайте одну и ту же тему сразу в нескольких разделах.
+
   - name: Don't double post
     content: |
       Пользуйтесь кнопкой Правка вместо нескольких сообщений подряд.
@@ -44,6 +48,10 @@ templates:
     action: append
     content: |
       Зачем писать мне в ЛС? Отвечайте в теме.
+
+  - name: Programming FAQ
+    content: |
+      https://www.programmersforum.ru/showthread.php?t=303485
 
   - name: separator
     id: sep
