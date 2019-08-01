@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reply Templates
 // @namespace    programmersforum.ru
-// @version      2.1
+// @version      2.1.1
 // @description  adds dialog with reply templates in all editors
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -127,15 +127,17 @@
     }
 
     function saveTemplatesSourceUrl(url) {
-        if (!url || url.trim().length < 5) {
-            url = DEFAULT_URL;
-        }
-
         window.localStorage.setItem(LOCALSTORAGE_URL_KEY, url);
     }
 
     function getTemplatesSourceUrl() {
-        return window.localStorage.getItem(LOCALSTORAGE_URL_KEY);
+        const url = window.localStorage.getItem(LOCALSTORAGE_URL_KEY);
+
+        if (!url || url.trim().length < 5) {
+            return DEFAULT_URL;
+        }
+
+        return url;
     }
 
     function loadTemplates() {
