@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reply Templates
 // @namespace    programmersforum.ru
-// @version      2.1.1
+// @version      2.2
 // @description  adds dialog with reply templates in all editors
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -41,15 +41,17 @@
         });
         modal.find('.modal-box').css({
             position: 'relative',
-            top: '50%',
+            boxSizing: 'border-box',
+            top: 0,
             left: '50%',
-            transform: 'translate(-50%, -50%)',
+            transform: 'translate(-50%, 0)',
             backgroundColor: 'rgb(225, 228, 242)',
             borderRadius: '10px',
             border: '2px solid rgb(190, 190, 190)',
             padding: '15px',
             width: '800px',
-            height: '720px',
+            height: 'calc(100% - 20px)',
+            margin: '10px 0',
             overflow: 'auto'
         });
     }
