@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reply Templates
 // @namespace    programmersforum.ru
-// @version      2.2
+// @version      2.3
 // @description  adds dialog with reply templates in all editors
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -102,13 +102,28 @@
         }
 
         append(text) {
-            const selectionStart = this.textarea[0].selectionStart;
-            const selectionEnd = this.textarea[0].selectionEnd;
+            const selection = this.getSelection();
 
             this.textarea.val(this.textarea.val() + text);
 
-            this.textarea[0].selectionStart = selectionStart;
-            this.textarea[0].selectionEnd = selectionEnd;
+            this.select(...selection);
+        }
+
+        prepend(text) {
+            const selection = this.getSelection();
+
+            this.textarea.val(text + this.textarea.val());
+
+            this.select(...selection);
+        }
+
+        getSelection() {
+            return [this.textarea[0].selectionStart, this.textarea[0].selectionEnd];
+        }
+
+        select(start, end) {
+            this.textarea[0].selectionStart = start;
+            this.textarea[0].selectionEnd = end;
             this.textarea[0].focus();
         }
     }
@@ -183,6 +198,9 @@
         switch (template.action) {
             case 'append':
                 editor.append('\n' + content);
+                break;
+            case 'prepend':
+                editor.prepend(content + '\n\n');
                 break;
             default:
             case 'insert':

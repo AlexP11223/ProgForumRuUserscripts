@@ -65,3 +65,8 @@ templates:
       $sep$[B][COLOR="Red"]
 
       [/COLOR][/B]
+
+  - name: Solution
+    action: prepend
+    content: |
+      [B][COLOR="SeaGreen"][Решение][/COLOR][/B]
