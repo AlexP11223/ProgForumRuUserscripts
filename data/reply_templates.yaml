@@ -53,6 +53,14 @@ templates:
     content: |
       https://www.programmersforum.ru/showthread.php?t=303485
 
+  - name: Why no answer
+    content: |
+      Смотрите [B][URL="https://programmersforum.ru/showpost.php?p=1769907&postcount=10"]Почему на мои темы не отвечают?[/URL][/B]
+
+  - name: No hacking
+    content: |
+      На этом форуме не помогают со взломом и прочими незаконными и аморальными вещами.
+
   - name: separator
     id: sep
     hide: true
