@@ -26,7 +26,19 @@ There is a bug when using it to post a message in a thread with multiple pages n
 
 ## [Copy Post Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_link.user.js)
 
+Adds a button in the top-right corner of each message to copy the link to this message to the clipboard.
+
+Originally it was generating `#post<id>` links that open the whole page and scroll to the specified message, but later it was replaced to `showpost.php?p=<id>` opening a page with just one message because `#post<id>` (as well as `showthread.php?p=<id>`) do not work corretly sometimes, such as when there are unread messages or when some messages were removed and the specified message moved to another page.
+
+![](https://i.imgur.com/xIf912s.png)
+
 ## [Copy Search Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_search_link.user.js)
+
+Adds buttons to copy links to the search results (you cannot simply copy it from the address bar because it expires) or filled search form.
+
+The script contains manual conversion from Unicode to CP1251 (Russian) to fix some encoding issues in JS (the forum was using non-Unicode vBulletin version).
+
+![](https://i.imgur.com/Gob6uug.png)
 
 ## [Improved code syntax highlighting](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_code_highlighter.user.js)
 
