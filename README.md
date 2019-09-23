@@ -50,6 +50,14 @@ The script contains manual conversion from Unicode to CP1251 (Russian) to fix so
 
 ## [Embed Videos](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_video_embed.user.js)
 
+Replaces youtube and coub links with their video players.
+
+Supports timestamps and different youtube URL formats, skips non-video links, such a playlists or channel pages.
+
+Handles only links inside the message itself, not in signatures, etc.
+
+![](https://i.imgur.com/GD9iTY8.png)
+
 ## [Quick Quote](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
 
 ## [Better thread managemnt (moderation)](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_fast_thread_management.user.js)
