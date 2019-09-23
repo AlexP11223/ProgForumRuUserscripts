@@ -24,6 +24,12 @@ There is a bug when using it to post a message in a thread with multiple pages n
 
 ## [Autosave unsent posts](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_autosave.user.js)
 
+Saves the content of the text editor in each thread (until the message is sent) in LocalStorage, to avoid losing it when web browser or OS crash or the page is closed accidentally.
+
+The content is saved separately for each thread, so it can be also used as draft.
+
+Works only for replies, not for editing or creating new threads.
+
 ## [Copy Post Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_link.user.js)
 
 Adds a button in the top-right corner of each message to copy the link to this message to the clipboard.
