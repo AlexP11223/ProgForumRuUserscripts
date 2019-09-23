@@ -2,7 +2,19 @@ UserScripts for a vBulettin 3.8 forum (https://programmersforum.ru). The scripts
 
 Some scripts (in [/non-user-js](/non-user-js)) were adapted to normal JS scripts that can by embedded by the forum owner.
 
+## [Reply Templates](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
+
 ## [Geo IP](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_geoip.user.js)
+
+Adds location and other info from several free Geo IP APIs, also extracts and parses useragents from the Who's Online page to show OS and web browser.
+
+Also parses useragents on the Who's Online page and adds buttons to show the Geo IP data there (some of the APIs have request limit).
+
+![](https://i.imgur.com/9SXBAUr.png)
+
+![](https://i.imgur.com/iWoKlxZ.png)
+
+![](https://i.imgur.com/T89fQs4.png)
 
 ## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
 
@@ -15,8 +27,6 @@ There is a bug when using it to post a message in a thread with multiple pages n
 ## [Copy Post Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_link.user.js)
 
 ## [Copy Search Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_search_link.user.js)
-
-## [Reply Templates](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
 
 ## [Improved code syntax highlighting](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_code_highlighter.user.js)
 
