@@ -18,12 +18,6 @@ Also parses useragents on the Who's Online page and adds buttons to show the Geo
 
 ![](https://i.imgur.com/T89fQs4.png)
 
-## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
-
-Sends messages by `Ctrl + Enter`, works in all textareas (quick reply, edit, etc.).
-
-There is a bug when using it to post a message in a thread with multiple pages not from the last page, the message will be sent successufully but the text will remain in the editor. Probably a conflict with the autosave script.
-
 ## [Autosave unsent posts](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_autosave.user.js)
 
 Saves the content of the text editor in each thread (until the message is sent) in LocalStorage, to avoid losing it when web browser or OS crash or the page is closed accidentally.
@@ -31,6 +25,18 @@ Saves the content of the text editor in each thread (until the message is sent) 
 The content is saved separately for each thread, so it can be also used as draft.
 
 Works only for replies, not for editing or creating new threads.
+
+## [Improved code syntax highlighting](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_code_highlighter.user.js)
+
+Improves [highlightjs](https://highlightjs.org/) automatic language detection by limiting the language list depending on the forum category.
+
+For example, in the C++ category it is limited to C++ and several other common languages like XML, JSON, SQL.
+
+Before this improvement the code language was detected incorrectly sometimes making it more difficult to read.
+
+Eventually this script was [integrated](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/non-user-js/highlight/code_highlighter.js) into the forum itself, and also [CODE=**lang**] tag was added allowing to specify the language manually.
+
+## [Quick Quote](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
 
 ## [Copy Post Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_link.user.js)
 
@@ -48,16 +54,6 @@ The script contains manual conversion from Unicode to CP1251 (Russian) to fix so
 
 ![](https://i.imgur.com/Gob6uug.png)
 
-## [Improved code syntax highlighting](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_code_highlighter.user.js)
-
-Improves [highlightjs](https://highlightjs.org/) automatic language detection by limiting the language list depending on the forum category.
-
-For example, in the C++ category it is limited to C++ and several other common languages like XML, JSON, SQL.
-
-Before this improvement the code language was detected incorrectly sometimes making it more difficult to read.
-
-Eventually this script was [embedded](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/non-user-js/highlight/code_highlighter.js) into the forum itself, and also [CODE=**lang**] tag was added allowing to specify the language manually.
-
 ## [Embed Videos](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_video_embed.user.js)
 
 Replaces youtube and coub links with their video players.
@@ -68,6 +64,10 @@ Handles only links inside the message itself, not in signatures, etc.
 
 ![](https://i.imgur.com/GD9iTY8.png)
 
-## [Quick Quote](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
-
 ## [Better thread managemnt (moderation)](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_fast_thread_management.user.js)
+
+## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
+
+Sends messages by `Ctrl + Enter`, works in all textareas (quick reply, edit, etc.).
+
+There is a bug when using it to post a message in a thread with multiple pages not from the last page, the message will be sent successufully but the text will remain in the editor. Probably a conflict with the autosave script.
