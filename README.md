@@ -4,6 +4,10 @@ Some scripts (in [/non-user-js](/non-user-js)) were adapted to normal JS scripts
 
 ## [Reply Templates](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
 
+Allows to quickly insert a prepared answer (mostly intended for moderators).
+
+Loads the templates from  a YAML file like in [data/reply_templates.yaml](data/reply_templates.yaml) using the specified URL. It can be a GitHub/Gist.GitHub Raw link or any other direct link. If the forum uses HTTPS the link also must be a HTTPS website and it must have a suitable `Access-Control-Allow-Origin` response header (Google.Drive doesn't have it), if it is not possible a workaround could be a proxy like https://cors-anywhere.herokuapp.com/ (may add some delay).
+
 [![](https://i.imgur.com/kxsByur.png)](https://www.youtube.com/watch?v=siXSBz3qQRY)
 
 ## [Geo IP](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_geoip.user.js)
