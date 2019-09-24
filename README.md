@@ -4,6 +4,8 @@ Some scripts (in [/non-user-js](/non-user-js)) were adapted to normal JS scripts
 
 ## [Reply Templates](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
 
+[![](https://i.imgur.com/kxsByur.png)](https://www.youtube.com/watch?v=siXSBz3qQRY)
+
 ## [Geo IP](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_geoip.user.js)
 
 Adds location and other info from several free Geo IP APIs, also extracts and parses useragents from the Who's Online page to show OS and web browser.
@@ -47,6 +49,14 @@ The script contains manual conversion from Unicode to CP1251 (Russian) to fix so
 ![](https://i.imgur.com/Gob6uug.png)
 
 ## [Improved code syntax highlighting](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_code_highlighter.user.js)
+
+Improves [highlightjs](https://highlightjs.org/) automatic language detection by limiting the language list depending on the forum category.
+
+For example, in the C++ category it is limited to C++ and several other common languages like XML, JSON, SQL.
+
+Before this improvement the code language was detected incorrectly sometimes making it more difficult to read.
+
+Eventually this script was [embedded](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/non-user-js/highlight/code_highlighter.js) into the forum itself, and also [CODE=**lang**] tag was added allowing to specify the language manually.
 
 ## [Embed Videos](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_video_embed.user.js)
 
