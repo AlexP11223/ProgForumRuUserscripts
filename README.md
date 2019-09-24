@@ -36,7 +36,13 @@ Before this improvement the code language was detected incorrectly sometimes mak
 
 Eventually this script was [integrated](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/non-user-js/highlight/code_highlighter.js) into the forum itself, and also [CODE=**lang**] tag was added allowing to specify the language manually.
 
-## [Quick Quote](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_reply_templates.user.js)
+## [Quick Quote](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_quick_quote.user.js)
+
+Shows a button near the mouse cursor to quote the selected text.
+
+Also modifies the behavior of the standard Quote button (that quotes the whole message) to add the quote into the quick reply editor instead of openning the page with the full editor.
+
+![](https://i.imgur.com/ENQQHwx.gif)
 
 ## [Copy Post Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_link.user.js)
 
