@@ -6,14 +6,14 @@ Some scripts (in [/non-user-js](/non-user-js)) were adapted to normal JS scripts
 
 Allows to quickly insert a prepared reply/snippet (mostly intended for moderators).
 
-Loads the templates from  a YAML file like in [data/reply_templates.yaml](data/reply_templates.yaml) using the specified URL. It can be a GitHub/Gist.GitHub Raw link or any other direct link. If the forum uses HTTPS the link also must be a HTTPS website and it must have a suitable `Access-Control-Allow-Origin` response header (Google.Drive doesn't have it), if it is not possible a workaround could be a proxy like https://cors-anywhere.herokuapp.com/ (may add some delay). The URL is stored in LocalStorage and requested every time when the dialog is opened, without any caching — it is very fast anyway for most hostings and significantly simplifies the implementation (note though that GET requests may be cached by web browsers, so for example when you changed the file on GitHub you may need to wait several minutes to see the changes in the dialog or disable caching in DevTools).
+Loads the templates from  a YAML file like [data/reply_templates.yaml](data/reply_templates.yaml) using the specified URL. It can be a GitHub/Gist.GitHub Raw link or any other direct link. If the forum uses HTTPS the link also must be a HTTPS website and it must have a suitable `Access-Control-Allow-Origin` response header (Google.Drive doesn't have it), if it is not possible a workaround could be a proxy like https://cors-anywhere.herokuapp.com/ (may add some delay). The URL is stored in LocalStorage and requested every time when the dialog is opened, without any caching — it is very fast anyway for most hostings and significantly simplifies the implementation (note though that GET requests may be cached by web browsers, so for example when you changed the file on GitHub you may need to wait several minutes to see the changes in the dialog or disable caching in DevTools).
 
 The format supports basic variables/sub-templates (currently not recursive) to reduce duplication. Any template with `id` can be used inside another template via `$templateName$`. Add `hide: true` to hide template in the dialog.
 
 Insertion modes:
 
 - **insert** (default) — insert at the current cursor position. Selected text will be removed.
-- **append**/**prepend** — insert at the end/beginning of the text. The cursor position and selection are preserved.
+- **append**/**prepend** — insert after/before the text currently entered text. The cursor position and selection are preserved.
 
 Works in all message editors: quick/fully reply, quick/full edit, moderator's warning description, PM, etc.
 
@@ -33,7 +33,7 @@ Also parses useragents on the Who's Online page and adds buttons to show the Geo
 
 ## [Autosave unsent posts](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_autosave.user.js)
 
-Saves the content of the text editor in each thread (until the message is sent) in LocalStorage, to avoid losing it when web browser or OS crash or the page is closed accidentally.
+Saves and restores the content of the text editor in each thread (until the message is sent) in LocalStorage, to avoid losing it when web browser or OS crash or the page is closed accidentally.
 
 The content is saved separately for each thread, so it can be also used as draft.
 
@@ -69,7 +69,7 @@ Originally it was generating `#post<id>` links that open the whole page and scro
 
 Adds buttons to copy links to the search results (you cannot simply copy it from the address bar because it expires) or filled search form.
 
-The script contains manual conversion from Unicode to CP1251 (Russian) to fix some encoding issues in JS (the forum was using non-Unicode vBulletin version).
+The script contains manual conversion from Unicode to CP1251 (Russian) to fix some encoding issues in JS (non-Unicode vBulletin version).
 
 ![](https://i.imgur.com/Gob6uug.png)
 
