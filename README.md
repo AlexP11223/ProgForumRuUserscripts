@@ -6,7 +6,14 @@ Some scripts (in [/non-user-js](/non-user-js)) were adapted to normal JS scripts
 
 Allows to quickly insert a prepared reply/snippet (mostly intended for moderators).
 
-Loads the templates from  a YAML file like in [data/reply_templates.yaml](data/reply_templates.yaml) using the specified URL. It can be a GitHub/Gist.GitHub Raw link or any other direct link. If the forum uses HTTPS the link also must be a HTTPS website and it must have a suitable `Access-Control-Allow-Origin` response header (Google.Drive doesn't have it), if it is not possible a workaround could be a proxy like https://cors-anywhere.herokuapp.com/ (may add some delay).
+Loads the templates from  a YAML file like in [data/reply_templates.yaml](data/reply_templates.yaml) using the specified URL. It can be a GitHub/Gist.GitHub Raw link or any other direct link. If the forum uses HTTPS the link also must be a HTTPS website and it must have a suitable `Access-Control-Allow-Origin` response header (Google.Drive doesn't have it), if it is not possible a workaround could be a proxy like https://cors-anywhere.herokuapp.com/ (may add some delay). The URL is stored in LocalStorage and requested every time when the dialog is opened, without any caching — it is very fast anyway for most hostings and significantly simplifies the implementation (note though that GET requests may be cached by web browsers, so for example when you changed the file on GitHub you may need to wait several minutes to see the changes in the dialog or disable caching in DevTools).
+
+The format supports basic variables/sub-templates (currently not recursive) to reduce duplication. Any template with `id` can be used inside another template via `$templateName$`. Add `hide: true` to hide template in the dialog.
+
+Insertion modes:
+
+- **insert** (default) — insert at the current cursor position. Selected text will be removed.
+- **append**/**prepend** — insert at the end/beginning of the text. The cursor position and selection are preserved.
 
 Works in all message editors: quick/fully reply, quick/full edit, moderator's warning description, PM, etc.
 
