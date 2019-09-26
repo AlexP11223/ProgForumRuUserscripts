@@ -55,7 +55,7 @@ Shows a button near the mouse cursor to quote the selected text.
 
 Also modifies the behavior of the standard Quote button (that quotes the whole message) to add the quote into the quick reply editor instead of openning the page with the full editor.
 
-![](https://i.imgur.com/ENQQHwx.gif)
+![](https://i.imgur.com/bylorrt.gif)
 
 ## [Copy Post Link](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_post_link.user.js)
 
