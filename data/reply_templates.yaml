@@ -10,7 +10,7 @@ templates:
     action: append
     content: |
       $sep$
-      [B][COLOR="Red"]Форматируйте код и используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум.[/COLOR] [URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
+      [B][COLOR="Red"]Форматируйте код (отступы) и используйте тег [noparse][CODE][/noparse] (кнопка [noparse][CODE][/noparse] в форме сообщения) при вставке кода на форум.[/COLOR] [URL="http://www.programmersforum.ru/showpost.php?p=1497723&postcount=3"]Подробнее в FAQ[/URL][/B]
 
   - name: No HELP
     content: |
