@@ -85,6 +85,8 @@ Handles only links inside the message itself, not in signatures, etc.
 
 ## [Better thread managemnt (moderation)](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_fast_thread_management.user.js)
 
+![](https://i.imgur.com/JFcu0kt.png)
+
 ## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
 
 Sends messages by `Ctrl + Enter`, works in all textareas (quick reply, edit, etc.).
