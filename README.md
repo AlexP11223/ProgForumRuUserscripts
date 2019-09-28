@@ -83,7 +83,9 @@ Handles only links inside the message itself, not in signatures, etc.
 
 ![](https://i.imgur.com/GD9iTY8.png)
 
-## [Better thread managemnt (moderation)](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_fast_thread_management.user.js)
+## [Better thread management (moderation)](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_fast_thread_management.user.js)
+
+Makes the thread management menu more convenient. Converts radio buttons into buttons (2 clicks instead of one) and adds a dropdown list with the popular forum categories to quickly move the thread.
 
 ![](https://i.imgur.com/JFcu0kt.png)
 
