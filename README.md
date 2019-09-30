@@ -25,6 +25,8 @@ Adds location and other info from several free Geo IP APIs, also extracts and pa
 
 Also parses useragents on the Who's Online page and adds buttons to show the Geo IP data there (some of the APIs have request limit).
 
+Note: you may need to disable your ad block for `/online.php?*`, `/postings.php?*` pages.
+
 ![](https://i.imgur.com/9SXBAUr.png)
 
 ![](https://i.imgur.com/iWoKlxZ.png)
