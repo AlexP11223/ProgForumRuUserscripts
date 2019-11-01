@@ -69,7 +69,7 @@
                 },
             }));
 
-        const nextPageLinks = $(html).find('a[href^=online][title^=Следующая]');
+        const nextPageLinks = $(html).find('a[href^=online][rel=next]');
         if (!nextPageLinks.length) {
             return users;
         }
