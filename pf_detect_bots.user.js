@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.0
+// @version      1.1
 // @description  add detectBots function that loads the list of online users and counts bots
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -19,21 +19,19 @@
         }, {});
     }
 
-    var allUsers = [];
-
-    var ipCounts = {};
-    var subnet3Counts = {};
-    var subnet2Counts = {};
+    let ipCounts = {};
+    let subnet3Counts = {};
+    let subnet2Counts = {};
 
     function isBot(user) {
-        var botUaParts = [
+        const botUaParts = [
             'bot', 'crawl', 'spider', 'batch', 'bing',
             'share', 'preview', 'facebook', 'vk.com',
             'curl', 'indy', 'http',
             'media', 'metrics', '(compatible)',
             'zh-cn', 'zh_cn', 'mb2345', 'liebao', 'micromessenger', 'kinza', // chinese https://www.johnlarge.co.uk/blocking-aggressive-chinese-crawlers-scrapers-bots/
         ];
-        return user.ua.length < 20 || botUaParts.some(s => user.ua.includes(s)) ||
+        return user.useragent.length < 20 || botUaParts.some(s => user.useragent.includes(s)) ||
             ipCounts[user.ip] > 2 ||
             subnet3Counts[user.subnet(3)] > 5 ||
             subnet2Counts[user.subnet(2)] > 20;
@@ -44,7 +42,7 @@
         subnet3Counts = countItems(users.map(u => u.subnet(3)));
         subnet2Counts = countItems(users.map(u => u.subnet(2)));
 
-        var bots = users.filter(isBot);
+        const bots = users.filter(isBot);
 
         console.log(`${bots.length} bots, ${users.length - bots.length} normal users`);
         console.log('Bots:');
@@ -52,36 +50,36 @@
         console.log('Normal users:');
         console.log(users.filter(ua => !isBot(ua)));
 
-        window.allUsers = allUsers;
+        window.users = users;
         window.ipCounts = ipCounts;
         window.subnet3Counts = subnet3Counts;
         window.subnet2Counts = subnet2Counts;
     }
 
-    function loadOnlineUsers(url) {
-        $.get(url, html => {
-            var users = $(html).find('[id^=resolveip]').toArray()
-                .map(el => ({
-                    ip: $(el).text().trim(),
-                    ua: $(el).parent().text().trim().split('\n').slice(-1)[0].toLowerCase().trim(),
-                    subnet: function (n) {
-                        return this.ip.split('.').slice(0, n).join('.');
-                    },
-                }));
-            allUsers = allUsers.concat(users);
+    async function loadOnlineUsers(url) {
+        console.log(`Loading ${url}`);
+        const html = await $.get(url);
 
-            var nextPageLinks = $(html).find('a[href^=online][title^=Следующая]');
-            if (nextPageLinks.length) {
-                var nextPageUrl = nextPageLinks[0].href;
-                console.log(nextPageUrl);
-                loadOnlineUsers(nextPageUrl)
-            } else {
-                showResults(allUsers);
-            }
-        });
+        const users = $(html).find('[id^=resolveip]').toArray()
+            .map(el => ({
+                ip: $(el).text().trim(),
+                useragent: $(el).parent().text().trim().split('\n').slice(-1)[0].toLowerCase().trim(),
+                subnet: function (n) {
+                    return this.ip.split('.').slice(0, n).join('.');
+                },
+            }));
+
+        const nextPageLinks = $(html).find('a[href^=online][title^=Следующая]');
+        if (!nextPageLinks.length) {
+            return users;
+        }
+
+        const nextPageUrl = nextPageLinks[0].href;
+        return users.concat(await loadOnlineUsers(nextPageUrl));
     }
 
-    window.detectBots = function () {
-        loadOnlineUsers('/online.php?s=&sortfield=time&sortorder=desc&who=all&ua=1&pp=200');
+    window.detectBots = async function () {
+        const users = await loadOnlineUsers('/online.php?s=&sortfield=time&sortorder=desc&who=all&ua=1&pp=200');
+        showResults(users);
     }
 })();
