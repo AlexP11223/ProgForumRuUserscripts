@@ -64,8 +64,7 @@ templates:
   - name: Pay for job ad
     content: |
       Создание объявлений о вакансиях разрешено только в разделе [url=https://www.programmersforum.ru/forumdisplay.php?f=30]Вакансии[/url].
-      Новичкам создание тем в этом разделе платное — [url]https://money.yandex.ru/to/4100192021489/990[/url], укажите в комментариях ваш ник для доступа к разделу.
-      Если есть вопросы — alarforum@yandex.ru или ЛС [url=https://www.programmersforum.ru/private.php?do=newpm&u=1]Alar[/url]
+      Новичкам создание тем в этом разделе платное — подробнее тут https://www.programmersforum.ru/showthread.php?p=1796469
 
   - name: separator
     id: sep
