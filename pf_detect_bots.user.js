@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.3.1
+// @version      1.3.2
 // @description  add detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -113,6 +113,7 @@
             useragent: u.useragent,
             detections: u.detections,
         })));
+        console.log(`Saved ${users.length} users to db`);
     };
 
     window.startLogDaemon = async function () {
