@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.1
+// @version      1.2
 // @description  add detectBots function that loads the list of online users and counts bots
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -19,11 +19,7 @@
         }, {});
     }
 
-    let ipCounts = {};
-    let subnet3Counts = {};
-    let subnet2Counts = {};
-
-    function isBot(user) {
+    function identify(users) {
         const botUaParts = [
             'bot', 'crawl', 'spider', 'batch', 'bing',
             'share', 'preview', 'facebook', 'vk.com',
@@ -31,32 +27,30 @@
             'media', 'metrics', '(compatible)',
             'zh-cn', 'zh_cn', 'mb2345', 'liebao', 'micromessenger', 'kinza', // chinese https://www.johnlarge.co.uk/blocking-aggressive-chinese-crawlers-scrapers-bots/
         ];
-        return user.useragent.length < 20 || botUaParts.some(s => user.useragent.includes(s)) ||
-            ipCounts[user.ip] > 2 ||
-            subnet3Counts[user.subnet(3)] > 5 ||
-            subnet2Counts[user.subnet(2)] > 20;
+
+        const ipCounts = countItems(users.map(u => u.ip));
+        const subnet3Counts = countItems(users.map(u => u.subnet(3)));
+        const subnet2Counts = countItems(users.map(u => u.subnet(2)));
+
+        const detectors = [
+            user => user.useragent.length < 20 || botUaParts.some(s => user.useragent.includes(s)) ? 'ua' : null,
+            user => ipCounts[user.ip] > 2 ? 'ip' : null,
+            user => subnet3Counts[user.subnet(3)] > 5 ? 'subnet3' : null,
+            user => subnet2Counts[user.subnet(2)] > 20 ? 'subnet2' : null,
+        ];
+
+        return users.map(user => {
+            const detections = detectors.map(d => d(user)).filter(Boolean).join(',');
+            return Object.assign(user, {
+                detections: detections,
+                isBot: function () {
+                    return this.detections;
+                }
+            })
+        });
     }
 
-    function showResults(users) {
-        ipCounts = countItems(users.map(u => u.ip));
-        subnet3Counts = countItems(users.map(u => u.subnet(3)));
-        subnet2Counts = countItems(users.map(u => u.subnet(2)));
-
-        const bots = users.filter(isBot);
-
-        console.log(`${bots.length} bots, ${users.length - bots.length} normal users`);
-        console.log('Bots:');
-        console.log(bots);
-        console.log('Normal users:');
-        console.log(users.filter(ua => !isBot(ua)));
-
-        window.users = users;
-        window.ipCounts = ipCounts;
-        window.subnet3Counts = subnet3Counts;
-        window.subnet2Counts = subnet2Counts;
-    }
-
-    async function loadOnlineUsers(url) {
+    async function loadOnlineUsers(url = '/online.php?s=&sortfield=time&sortorder=desc&who=all&ua=1&pp=200') {
         console.log(`Loading ${url}`);
         const html = await $.get(url);
 
@@ -79,7 +73,16 @@
     }
 
     window.detectBots = async function () {
-        const users = await loadOnlineUsers('/online.php?s=&sortfield=time&sortorder=desc&who=all&ua=1&pp=200');
-        showResults(users);
+        const users = identify(await loadOnlineUsers());
+
+        const bots = users.filter(u => u.isBot());
+
+        console.log(`${bots.length} bots, ${users.length - bots.length} normal users`);
+        console.log('Bots:');
+        console.log(bots);
+        console.log('Normal users:');
+        console.log(users.filter(u => !u.isBot()));
+
+        window.users = users;
     }
 })();
