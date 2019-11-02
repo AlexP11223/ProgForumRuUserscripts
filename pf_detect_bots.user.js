@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.3
+// @version      1.3.1
 // @description  add detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -107,8 +107,7 @@
     window.logUsers = async function () {
         const users = identify(await loadOnlineUsers());
 
-        const db = db();
-        db.users.bulkPut(users.map(u => ({
+        db().users.bulkPut(users.map(u => ({
             date: new Date(),
             ip: u.ip,
             useragent: u.useragent,
