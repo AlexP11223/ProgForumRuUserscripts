@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.2
-// @description  add detectBots function that loads the list of online users and counts bots
+// @version      1.3
+// @description  add detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
+// @require      https://unpkg.com/dexie@2.0.4/dist/dexie.js
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_detect_bots.user.js
 // ==/UserScript==
@@ -17,6 +18,10 @@
             acc[item] = acc[item] ? acc[item] + 1 : 1;
             return acc;
         }, {});
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     function identify(users) {
@@ -40,12 +45,12 @@
         ];
 
         return users.map(user => {
-            const detections = detectors.map(d => d(user)).filter(Boolean).join(',');
+            const detections = detectors.map(d => d(user)).filter(Boolean);
             return Object.assign(user, {
                 detections,
                 isBot: function () {
-                    return this.detections;
-                }
+                    return this.detections.length;
+                },
             })
         });
     }
@@ -77,12 +82,49 @@
 
         const bots = users.filter(u => u.isBot());
 
+        const mapToOutput = u => ({ ip: u.ip, useragent: u.useragent, detections: u.detections.join(', ') });
         console.log(`${bots.length} bots, ${users.length - bots.length} normal users`);
         console.log('Bots:');
-        console.log(bots);
+        console.log(bots.map(mapToOutput));
         console.log('Normal users:');
-        console.log(users.filter(u => !u.isBot()));
+        console.log(users.filter(u => !u.isBot()).map(mapToOutput));
 
         window.onlineUsers = users;
+    };
+
+    let _db = null;
+
+    function db() {
+        if (!_db) {
+            _db = new Dexie('UserLogDatabase');
+            _db.version(1).stores({ users: '++, date, ip, useragent, *detections' });
+        }
+        return _db;
     }
+
+    window.userLogsDb = db;
+
+    window.logUsers = async function () {
+        const users = identify(await loadOnlineUsers());
+
+        const db = db();
+        db.users.bulkPut(users.map(u => ({
+            date: new Date(),
+            ip: u.ip,
+            useragent: u.useragent,
+            detections: u.detections,
+        })));
+    };
+
+    window.startLogDaemon = async function () {
+        while (true) {
+            try {
+                await logUsers();
+            } catch (e) {
+                console.log(e);
+            }
+
+            await sleep(20 * 60 * 1000);
+        }
+    };
 })();
