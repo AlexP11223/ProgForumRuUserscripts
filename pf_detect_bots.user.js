@@ -42,7 +42,7 @@
         return users.map(user => {
             const detections = detectors.map(d => d(user)).filter(Boolean).join(',');
             return Object.assign(user, {
-                detections: detections,
+                detections,
                 isBot: function () {
                     return this.detections;
                 }
@@ -83,6 +83,6 @@
         console.log('Normal users:');
         console.log(users.filter(u => !u.isBot()));
 
-        window.users = users;
+        window.onlineUsers = users;
     }
 })();
