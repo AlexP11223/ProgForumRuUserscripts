@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.3.3
+// @version      1.4.0
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
 // @require      https://unpkg.com/dexie@2.0.4/dist/dexie.js
+// @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js
+// @require      https://unpkg.com/papaparse@5.1.0/papaparse.min.js
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_detect_bots.user.js
 // ==/UserScript==
@@ -126,5 +129,12 @@
 
             await sleep(20 * 60 * 1000);
         }
+    };
+
+    window.filterUserLogs = async function (filter = () => true, startDate = moment().subtract(10, 'years').toDate(), endDate = moment().toDate()) {
+        return await db().users
+            .where('date').between(startDate, endDate)
+            .and(filter)
+            .toArray();
     };
 })();
