@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.3.2
-// @description  add detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
+// @version      1.3.3
+// @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
 // @require      https://unpkg.com/dexie@2.0.4/dist/dexie.js
@@ -107,7 +107,7 @@
     window.logUsers = async function () {
         const users = identify(await loadOnlineUsers());
 
-        db().users.bulkPut(users.map(u => ({
+        await db().users.bulkPut(users.map(u => ({
             date: new Date(),
             ip: u.ip,
             useragent: u.useragent,
