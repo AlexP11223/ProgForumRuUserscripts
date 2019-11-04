@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.9.0
+// @version      1.9.1
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -183,7 +183,8 @@
     function getOsNameVersion(uaData) {
         const name = uaData.os.name;
         const version = uaData.os.version;
-        return [name, version].join(' ').trim();
+        const allowedVersions = ['XP', 'Vista', '7', '8', '8.1', '10'];
+        return [name, allowedVersions.includes(version) ? version : ''].join(' ').trim();
     }
 
     function getBrowserNameVersion(uaData) {
