@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.8.0
+// @version      1.8.1
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -163,6 +163,6 @@
     };
 
     window.countVisitorsByTime = function (users) {
-        return _.countBy(users, u => moment(u.date.utcOffset(3).seconds(0).milliseconds(0).format('YYYY-MM-DD HH:mm')));
+        return _.countBy(users, u => moment(u.date).utcOffset(3).seconds(0).milliseconds(0).format('YYYY-MM-DD HH:mm'));
     };
 })();
