@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.6.4
+// @version      1.7.0
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -152,4 +152,8 @@
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8'});
         saveAs(blob, 'users.csv');
     };
+
+    window.uniqueUsers = function (users) {
+        return _.uniqBy(users, 'ip');
+    }
 })();
