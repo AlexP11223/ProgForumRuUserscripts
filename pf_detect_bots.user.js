@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.6.3
+// @version      1.6.4
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
+// @require      https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js
 // @require      https://unpkg.com/dexie@2.0.4/dist/dexie.js
 // @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js
@@ -15,13 +16,6 @@
 
 (function () {
     'use strict';
-
-    function countItems(arr) {
-        return arr.reduce((acc, item) => {
-            acc[item] = acc[item] ? acc[item] + 1 : 1;
-            return acc;
-        }, {});
-    }
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -40,9 +34,9 @@
             'zh-cn', 'zh_cn', 'mb2345', 'liebao', 'micromessenger', 'kinza', // chinese https://www.johnlarge.co.uk/blocking-aggressive-chinese-crawlers-scrapers-bots/
         ];
 
-        const ipCounts = countItems(users.map(u => u.ip));
-        const subnet3Counts = countItems(users.map(u => u.subnet(3)));
-        const subnet2Counts = countItems(users.map(u => u.subnet(2)));
+        const ipCounts = _.countBy(users, 'ip');
+        const subnet3Counts = _.countBy(users, u => u.subnet(3));
+        const subnet2Counts = _.countBy(users, u => u.subnet(2));
 
         const detectors = [
             user => user.useragent.length < 20 || botUaParts.some(s => user.useragent.includes(s)) ? 'ua' : null,
