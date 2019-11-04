@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.8.3
+// @version      1.9.0
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -10,6 +10,7 @@
 // @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js
 // @require      https://unpkg.com/papaparse@5.1.0/papaparse.min.js
+// @require      https://cdn.jsdelivr.net/npm/ua-parser-js@0/dist/ua-parser.min.js
 // @grant        none
 // @downloadURL  https://github.com/AlexP11223/ProgForumRuUserscripts/raw/master/pf_detect_bots.user.js
 // ==/UserScript==
@@ -168,5 +169,38 @@
 
     window.countVisitorsByTime = function (users) {
         return _.countBy(users, u => moment(u.date).utcOffset(OUTPUT_TIMEZONE).seconds(0).milliseconds(0).format('YYYY-MM-DD HH:mm'));
+    };
+
+    // some user-agents are truncated
+    function isYandexBrowser(ua) {
+        return ua.split(' ').pop().indexOf('Ya') === 0;
+    }
+
+    function isChrome(ua) {
+        return ua.split(' ').pop().indexOf('Ch') === 0;
+    }
+
+    function getOsNameVersion(uaData) {
+        const name = uaData.os.name;
+        const version = uaData.os.version;
+        return [name, version].join(' ').trim();
+    }
+
+    function getBrowserNameVersion(uaData) {
+        let name = uaData.browser.name;
+        let version = uaData.browser.version;
+        if (name === 'Chrome' && isYandexBrowser(uaData.ua)) {
+            name = 'Yandex';
+            version = '';
+        }
+        return [name, version].join(' ').trim();
+    }
+
+    window.countUsersOS = function (users) {
+        return _.countBy(users, u => getOsNameVersion(UAParser(u.useragent)));
+    };
+
+    window.countUsersBrowsers = function (users) {
+        return _.countBy(users, u => getBrowserNameVersion(UAParser(u.useragent)));
     };
 })();
