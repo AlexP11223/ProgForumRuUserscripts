@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Detect Bots
 // @namespace    programmersforum.ru
-// @version      1.8.2
+// @version      1.8.3
 // @description  adds detectBots function that loads the list of online users and counts bots, and logUsers/startLogDaemon functions to save users into IndexedDB
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -16,6 +16,8 @@
 
 (function () {
     'use strict';
+
+    const OUTPUT_TIMEZONE = 3;
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -132,7 +134,7 @@
     window.FILTER_IS_BOT = isBot;
     window.FILTER_IS_NORMAL_USER = user => !isBot(user);
 
-    window.filterUserLogs = async function (filter = () => true, startDate = moment().subtract(10, 'years').toDate(), endDate = moment().toDate()) {
+    window.filterUserLogs = async function (filter = () => true, startDate = '2019-10-30 00:00:00+03', endDate = new Date()) {
         return await db().users
             .where('date').between(moment(startDate).toDate(), moment(endDate).toDate())
             .and(filter)
@@ -151,7 +153,7 @@
     window.exportUsersToCsv = function (users) {
         const header = ['Date/Time', 'IP', 'User-Agent', 'Detections'];
         const records = users.map(u => [
-            moment(u.date).utcOffset(3).format('YYYY-MM-DD HH:mm:ss'),
+            moment(u.date).utcOffset(OUTPUT_TIMEZONE).format('YYYY-MM-DD HH:mm:ss'),
             u.ip,
             u.useragent,
             u.detections.join(', '),
@@ -165,6 +167,6 @@
     };
 
     window.countVisitorsByTime = function (users) {
-        return _.countBy(users, u => moment(u.date).utcOffset(3).seconds(0).milliseconds(0).format('YYYY-MM-DD HH:mm'));
+        return _.countBy(users, u => moment(u.date).utcOffset(OUTPUT_TIMEZONE).seconds(0).milliseconds(0).format('YYYY-MM-DD HH:mm'));
     };
 })();
