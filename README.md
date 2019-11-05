@@ -91,6 +91,16 @@ Makes the thread management menu more convenient. Converts radio buttons into bu
 
 ![](https://i.imgur.com/JFcu0kt.png)
 
+## [Bot Detector, Visitor Counter](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_detect_bots.user.js)
+
+![](https://i.imgur.com/w6M8Eyy.png)
+
+Adds a function that counts normal users and bots (based on User-Agents or IP/subnet repetitions) in the list of online users.
+
+Also it is possible to save the data automatically to IndexedDB every 20 minutes (vBulletin keeps all clients in this list for 30 minutes after the last page request) and later filter, export to CSV.
+
+It was used to estimate the number of the unique visitors and compare with other counters.
+
 ## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
 
 Sends messages by `Ctrl + Enter`, works in all textareas (quick reply, edit, etc.).
