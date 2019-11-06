@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Hide logo, etc.
 // @namespace    programmersforum.ru
-// @version      1.4
+// @version      1.5
 // @description  hides the huge logo and other useless stuff
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -42,13 +42,11 @@
             .remove();
         emailRequestBlock.remove();
 
-        const beforeDonate = $('center a[href^="showthread.php?t=328680"]')
-            .parent()
-            .prev();
-        beforeDonate
-            .nextAll(':lt(4)')
+        const buyAdBlock = $('center:contains(alarforum@yandex.ru)');
+        buyAdBlock
+            .next('br')
             .remove();
-        beforeDonate.remove();
+        buyAdBlock.remove();
 
         $('style.declutter').remove();
     });
