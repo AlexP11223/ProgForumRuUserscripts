@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.1.0
+// @version      1.1.1
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -69,7 +69,7 @@
         const imgs = [
             ...htmlDoc.querySelectorAll('a[href^="member.php"] img[src*="u="]'),
             ...htmlDoc.querySelectorAll('img[src*="attachmentid="]'),
-            ...htmlDoc.querySelectorAll('img[src^="images/smiles/"]'),
+            ...htmlDoc.querySelectorAll('img[src^="images/smilies/"]'),
         ];
         const imgUrls = imgs.map(img => img.src);
 
