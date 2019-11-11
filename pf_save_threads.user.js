@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.2.1
+// @version      1.3.0
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -91,6 +91,10 @@
         return htmlDoc.body.innerHTML;
     }
 
+    function getLocalAttachmentPath(attachment) {
+        return `attachments/${attachment.id} ${attachment.name}`;
+    }
+
     async function loadAttachments(html) {
         const htmlDoc = parseHtml(html);
 
@@ -104,29 +108,20 @@
 
             try {
                 const id = new URL(link.href, location.origin).searchParams.get('attachmentid');
-                attachments.push({
+                const attachment = {
                     id,
                     name: sanitizeFileName(link.textContent),
                     blob: await loadFile(link.href),
-                });
+                };
+                attachments.push(attachment);
+
+                link.href = getLocalAttachmentPath(attachment);
             } catch (e) {
                 console.log(e);
             }
         }
 
-        return attachments;
-    }
-
-    const MIME_EXTENSION_MAP = new Map(Object.entries({
-        'application/zip': '.zip',
-        'application/pdf': '.pdf',
-        'application/msword': '.doc',
-        'plain/text': '.txt',
-        // looks like other types are unknown/unknown in vBulletin
-    }));
-
-    function getExtension(mimeType) {
-        return MIME_EXTENSION_MAP.has(mimeType) ? MIME_EXTENSION_MAP.get(mimeType) : '';
+        return [htmlDoc.body.innerHTML, attachments];
     }
 
     async function loadThread(id) {
@@ -149,13 +144,14 @@
 
         const postsHtml = `<div id="posts">${pages.map(p => p.content).join('')}</div>`;
         const postsHtmlWithImages = await replaceRemoteImages(postsHtml);
+        const [postsHtmlWithImagesAndAttachments, attachments] = await loadAttachments(postsHtmlWithImagesAndAttachments);
 
         return {
             id,
             title: firstPage.title,
             categories: firstPage.categories,
             pageCount: firstPage.pageCount,
-            attachments: await loadAttachments(postsHtml),
+            attachments,
             html: `<!DOCTYPE html>
 <html lang="ru">
 ${head}
@@ -190,7 +186,7 @@ ${postsHtmlWithImages}
             zip.file(`${ZIP_ROOT}${path}/${fileName}`, thread.html);
 
             for (const attachment of thread.attachments) {
-                zip.file(`${ZIP_ROOT}${path}/attachments/${attachment.id} ${attachment.name}`, attachment.blob);
+                zip.file(`${ZIP_ROOT}${path}/${getLocalAttachmentPath(attachment)}`, attachment.blob);
             }
         }
 
