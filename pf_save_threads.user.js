@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.2.0
+// @version      1.2.1
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -107,7 +107,7 @@
                 attachments.push({
                     id,
                     name: sanitizeFileName(link.textContent),
-                    blob: await loadFile(url.href),
+                    blob: await loadFile(link.href),
                 });
             } catch (e) {
                 console.log(e);
