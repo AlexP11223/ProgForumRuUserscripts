@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.1.1
+// @version      1.2.0
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -96,19 +96,20 @@
     async function loadAttachments(html) {
         const htmlDoc = parseHtml(html);
 
-        const attachmentUrls = [
+        const attachmentLinks = [
             ...htmlDoc.body.querySelectorAll('a[href*="attachmentid"]:not([rel])'),
-        ].map(a => a.href);
+        ];
 
         let attachments = [];
-        for (const url of attachmentUrls) {
+        for (const link of attachmentLinks) {
             await sleep(_.random(1000, 3000));
 
             try {
-                const id = new URL(url, BASE_URL).searchParams.get('attachmentid');
+                const id = new URL(link.href, BASE_URL).searchParams.get('attachmentid');
                 attachments.push({
                     id,
-                    blob: await loadFile(url),
+                    name: sanitizeFileName(link.textContent),
+                    blob: await loadFile(url.href),
                 });
             } catch (e) {
                 console.log(e);
@@ -191,7 +192,7 @@ ${postsHtmlWithImages}
             zip.file(`${ZIP_ROOT}${path}/${fileName}`, thread.html);
 
             for (const attachment of thread.attachments) {
-                zip.file(`${ZIP_ROOT}${path}/attachments/${attachment.id}${getExtension(attachment.blob.type)}`, attachment.blob);
+                zip.file(`${ZIP_ROOT}${path}/attachments/${attachment.id} ${attachment.name}`, attachment.blob);
             }
         }
 
