@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.0.0
+// @version      1.1.0
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -190,7 +190,7 @@ ${postsHtmlWithImages}
             zip.file(`${ZIP_ROOT}${path}/${fileName}`, thread.html);
 
             for (const attachment of thread.attachments) {
-                zip.file(`${ZIP_ROOT}attachments/${attachment.id}${getExtension(attachment.blob.type)}`, attachment.blob);
+                zip.file(`${ZIP_ROOT}${path}/attachments/${attachment.id}${getExtension(attachment.blob.type)}`, attachment.blob);
             }
         }
 
