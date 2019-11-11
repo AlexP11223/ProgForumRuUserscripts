@@ -174,7 +174,8 @@ ${postsHtmlWithImages}
     }
 
     function sanitizeFileName(input, replacement = ' ') {
-        return input.replace(/[\/\?<>\\:\*\|"]/g, replacement);
+        return _.truncate(input, {length: 100, omission: ''})
+            .replace(/[\/\?<>\\:\*\|"]/g, replacement);
     }
 
     window.exportThreads = async function (...ids) {
@@ -185,7 +186,7 @@ ${postsHtmlWithImages}
         for (const id of ids) {
             const thread = await loadThread(id);
 
-            const fileName = `${thread.id} ${_.truncate(sanitizeFileName(thread.title), {length: 100})}.html`;
+            const fileName = `${thread.id} ${sanitizeFileName(_.truncate(thread.title, {length: 100}))}.html`;
             const path = thread.categories.map(sanitizeFileName).join('/');
             zip.file(`${ZIP_ROOT}${path}/${fileName}`, thread.html);
 
