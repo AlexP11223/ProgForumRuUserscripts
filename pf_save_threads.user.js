@@ -69,6 +69,7 @@
         const imgs = [
             ...htmlDoc.querySelectorAll('a[href^="member.php"] img[src*="u="]'),
             ...htmlDoc.querySelectorAll('img[src*="attachmentid="]'),
+            ...htmlDoc.querySelectorAll('img[src^="images/smiles/"]'),
         ];
         const imgUrls = imgs.map(img => img.src);
 
