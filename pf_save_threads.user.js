@@ -16,8 +16,6 @@
 (function () {
     'use strict';
 
-    const BASE_URL = 'https://programmersforum.ru/';
-
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -41,7 +39,7 @@
     }
 
     function threadUrl(threadId) {
-        return `${BASE_URL}showthread.php?t=${threadId}`;
+        return `/showthread.php?t=${threadId}`;
     }
 
     function generateThreadPagesUrls(threadId, pageCount) {
@@ -105,7 +103,7 @@
             await sleep(_.random(1000, 3000));
 
             try {
-                const id = new URL(link.href, BASE_URL).searchParams.get('attachmentid');
+                const id = new URL(link.href, location.origin).searchParams.get('attachmentid');
                 attachments.push({
                     id,
                     name: sanitizeFileName(link.textContent),
@@ -207,7 +205,7 @@ ${postsHtmlWithImages}
     };
 
     window.loadThreadsList = async function (forumId) {
-        const startUrl = `${BASE_URL}archive/index.php/f-${forumId}.html`;
+        const startUrl = `/archive/index.php/f-${forumId}.html`;
 
         console.log(`Loading ${startUrl}`);
         const firstPageHtmlDoc = parseHtml(await $.get(startUrl));
