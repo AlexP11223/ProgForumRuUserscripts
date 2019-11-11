@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.3.0
+// @version      1.3.1
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -144,7 +144,7 @@
 
         const postsHtml = `<div id="posts">${pages.map(p => p.content).join('')}</div>`;
         const postsHtmlWithImages = await replaceRemoteImages(postsHtml);
-        const [postsHtmlWithImagesAndAttachments, attachments] = await loadAttachments(postsHtmlWithImagesAndAttachments);
+        const [postsHtmlWithImagesAndAttachments, attachments] = await loadAttachments(postsHtmlWithImages);
 
         return {
             id,
@@ -163,7 +163,7 @@ ${head}
 </style>
 <h2>${firstPage.categories.join(' - ')}</h2>
 <h1>${firstPage.title}</h1>
-${postsHtmlWithImages}
+${postsHtmlWithImagesAndAttachments}
 </body></html>`,
         };
     }
