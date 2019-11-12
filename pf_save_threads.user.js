@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.3.1
+// @version      1.3.2
 // @description  adds exportThreads function to export the specified threads
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -201,6 +201,8 @@ ${postsHtmlWithImagesAndAttachments}
     };
 
     window.loadThreadsList = async function (forumId) {
+        await $.get('/archive/index.php?pda=1');
+
         const startUrl = `/archive/index.php/f-${forumId}.html`;
 
         console.log(`Loading ${startUrl}`);
