@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.3.2
-// @description  adds exportThreads function to export the specified threads
+// @version      1.3.3
+// @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
 // @require      https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js
