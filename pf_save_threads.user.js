@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.5.3
+// @version      1.5.4
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -156,7 +156,7 @@
 <html lang="ru">
 ${head}
 <body>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/dist/vbulletin_important.css?v=3811" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/dist/vbulletin_important.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/non-user-js/highlight/styles/programmersforum.css" />
 <style type="text/css">
     img[src^="images/1070/"],
