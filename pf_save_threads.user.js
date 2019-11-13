@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.6.1
+// @version      1.6.2
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -162,7 +162,7 @@
         let pollDetailedResults = '';
         if (pages[0].pollResultsUrl) {
             try {
-                pollDetailedResults = loadPollResults(pages[0].pollResultsUrl);
+                pollDetailedResults = await loadPollResults(pages[0].pollResultsUrl);
             } catch (e) {
                 console.error(e);
             }
