@@ -10,6 +10,7 @@ pre code, .hljs {
     color: #111;
     background: #EBE7DE;
     overflow: auto;
+    padding: 6px;
 }
 
 pre code {
