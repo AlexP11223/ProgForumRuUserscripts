@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.4.1
+// @version      1.5.0
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -141,6 +141,30 @@
         return cssCache;
     }
 
+    function minifyJs(js) {
+        return js
+            .replace(/\/\*[\s\S]+\*\//g, '')
+            .replace(/(\r\n|\n)+/g, '\n')
+            .split('\n').map(s => s.trim()).join('\n');
+    }
+
+    let jsCache = null;
+
+    async function getJs() {
+        if (!jsCache) {
+            jsCache = '';
+            for (const url of ['/alex/video_embed.js', '/alex/code_highlighter.js']) {
+                console.log(`Loading ${url}`);
+                try {
+                    jsCache += minifyJs(await $.get(url, null, null, 'text')) + '\n';
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+        return jsCache;
+    }
+
     async function loadThread(id) {
         console.log(`Loading ${threadUrl(id)}`);
         const firstPage = parseThread(await $.get(threadUrl(id)));
@@ -183,6 +207,15 @@ ${head}
 <h2>${firstPage.categories.join(' - ')}</h2>
 <h1>${firstPage.title}</h1>
 ${postsHtmlWithImagesAndAttachments}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
+<script>
+    ${await getJs()};
+    
+    codehighlighter.init();
+    videoembed.init({hideLinks: true});
+</script>
 </body></html>`,
         };
     }
