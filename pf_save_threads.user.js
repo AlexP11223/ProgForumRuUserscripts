@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.5.0
+// @version      1.5.1
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -209,7 +209,7 @@ ${head}
 ${postsHtmlWithImagesAndAttachments}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/dist/highlight.pack.js"></script>
 <script>
     ${await getJs()};
     
