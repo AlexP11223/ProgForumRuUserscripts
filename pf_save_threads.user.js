@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.3.3
+// @version      1.4.0
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -59,7 +59,7 @@
             .then(response => response.data);
     }
 
-    const IMG_CACHE = new Map();
+    const imgCache = new Map();
 
     async function replaceRemoteImages(html) {
         const htmlDoc = parseHtml(html);
@@ -72,9 +72,9 @@
         const imgUrls = imgs.map(img => img.src);
 
         for (const imgUrl of imgUrls) {
-            if (!IMG_CACHE.has(imgUrl)) {
+            if (!imgCache.has(imgUrl)) {
                 try {
-                    IMG_CACHE.set(imgUrl, await loadImageBase64(imgUrl));
+                    imgCache.set(imgUrl, await loadImageBase64(imgUrl));
                 } catch (e) {
                     console.log(e);
                 }
@@ -82,7 +82,7 @@
         }
 
         for (const img of imgs) {
-            const localUrl = IMG_CACHE.get(img.src);
+            const localUrl = imgCache.get(img.src);
             if (localUrl) {
                 img.src = localUrl;
             }
@@ -124,6 +124,19 @@
         return [htmlDoc.body.innerHTML, attachments];
     }
 
+    let cssCache = null;
+
+    async function getCss() {
+        if (!cssCache) {
+            cssCache = '';
+            for (const url of ['/clientscript/vbulletin_important.css?v=3811', '/highlight/styles/programmersforum.css']) {
+                console.log(`Loading ${url}`);
+                cssCache += await $.get(url) + '\n';
+            }
+        }
+        return cssCache;
+    }
+
     async function loadThread(id) {
         console.log(`Loading ${threadUrl(id)}`);
         const firstPage = parseThread(await $.get(threadUrl(id)));
@@ -160,6 +173,8 @@ ${head}
     img[src^="images/1070/"],
     img[src="images/icons/icon1.gif"]
     { display: none; }
+    
+    ${await getCss()}
 </style>
 <h2>${firstPage.categories.join(' - ')}</h2>
 <h1>${firstPage.title}</h1>
