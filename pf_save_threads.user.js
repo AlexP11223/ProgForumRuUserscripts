@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.5.1
+// @version      1.5.3
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -124,47 +124,6 @@
         return [htmlDoc.body.innerHTML, attachments];
     }
 
-    let cssCache = null;
-
-    async function getCss() {
-        if (!cssCache) {
-            cssCache = '';
-            for (const url of ['/clientscript/vbulletin_important.css?v=3811', '/highlight/styles/programmersforum.css']) {
-                console.log(`Loading ${url}`);
-                try {
-                    cssCache += await $.get(url) + '\n';
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-        }
-        return cssCache;
-    }
-
-    function minifyJs(js) {
-        return js
-            .replace(/\/\*[\s\S]+\*\//g, '')
-            .replace(/(\r\n|\n)+/g, '\n')
-            .split('\n').map(s => s.trim()).join('\n');
-    }
-
-    let jsCache = null;
-
-    async function getJs() {
-        if (!jsCache) {
-            jsCache = '';
-            for (const url of ['/alex/video_embed.js', '/alex/code_highlighter.js']) {
-                console.log(`Loading ${url}`);
-                try {
-                    jsCache += minifyJs(await $.get(url, null, null, 'text')) + '\n';
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-        }
-        return jsCache;
-    }
-
     async function loadThread(id) {
         console.log(`Loading ${threadUrl(id)}`);
         const firstPage = parseThread(await $.get(threadUrl(id)));
@@ -197,22 +156,22 @@
 <html lang="ru">
 ${head}
 <body>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/dist/vbulletin_important.css?v=3811" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/non-user-js/highlight/styles/programmersforum.css" />
 <style type="text/css">
     img[src^="images/1070/"],
     img[src="images/icons/icon1.gif"]
     { display: none; }
-    
-    ${await getCss()}
 </style>
 <h2>${firstPage.categories.join(' - ')}</h2>
 <h1>${firstPage.title}</h1>
 ${postsHtmlWithImagesAndAttachments}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/dist/highlight.pack.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/non-user-js/video_embed.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/non-user-js/highlight/dist/highlight.pack.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/non-user-js/highlight/code_highlighter.min.js"></script>
 <script>
-    ${await getJs()};
-    
     codehighlighter.init();
     videoembed.init({hideLinks: true});
 </script>
