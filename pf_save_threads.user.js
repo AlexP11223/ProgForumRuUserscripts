@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.5.5
+// @version      1.6.0
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -29,9 +29,16 @@
 
         const pageCountBar = htmlDoc.querySelector('.pagenav .vbmenu_control');
 
+        const posts = htmlDoc.querySelector('#posts');
+
+        const pollForm = htmlDoc.querySelector('form[action^="poll.php"]');
+        const pollImg = htmlDoc.querySelector('img[src*="/polls/"]');
+        const pollResults = pollImg ? pollImg.closest('table') : null;
+
         return {
             head: htmlDoc.head.innerHTML,
-            content: htmlDoc.querySelector('#posts').innerHTML,
+            content: posts.innerHTML,
+            additionalContent: [pollForm, pollResults].map(el => el ? el.outerHTML : '').join('\n'),
             title: htmlDoc.querySelector('.navbar strong').textContent.trim(),
             categories: Array.from(htmlDoc.querySelectorAll('.navbar a[href^=forumdisplay]')).map(el => el.textContent.trim()),
             pageCount: pageCountBar ? parseInt(pageCountBar.textContent.split(' ')[3]) : 1,
@@ -68,6 +75,8 @@
             ...htmlDoc.querySelectorAll('a[href^="member.php"] img[src*="u="]'),
             ...htmlDoc.querySelectorAll('img[src*="attachmentid="]'),
             ...htmlDoc.querySelectorAll('img[src^="images/smilies/"]'),
+            ...htmlDoc.querySelectorAll('img[src*="/polls/"]'),
+            ...htmlDoc.querySelectorAll('img[src$="clear.gif"]'),
         ];
         const imgUrls = imgs.map(img => img.src);
 
@@ -142,7 +151,7 @@
 
         const head = pages[0].head.replace('windows-1251', 'utf-8');
 
-        const postsHtml = `<div id="posts">${pages.map(p => p.content).join('')}</div>`;
+        const postsHtml = `${pages[0].additionalContent}<div id="posts">${pages.map(p => p.content).join('')}</div>`;
         const postsHtmlWithImages = await replaceRemoteImages(postsHtml);
         const [postsHtmlWithImagesAndAttachments, attachments] = await loadAttachments(postsHtmlWithImages);
 
