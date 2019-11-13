@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.5.4
+// @version      1.5.5
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -30,7 +30,7 @@
         const pageCountBar = htmlDoc.querySelector('.pagenav .vbmenu_control');
 
         return {
-            head: htmlDoc.head.outerHTML,
+            head: htmlDoc.head.innerHTML,
             content: htmlDoc.querySelector('#posts').innerHTML,
             title: htmlDoc.querySelector('.navbar strong').textContent.trim(),
             categories: Array.from(htmlDoc.querySelectorAll('.navbar a[href^=forumdisplay]')).map(el => el.textContent.trim()),
@@ -154,8 +154,8 @@
             attachments,
             html: `<!DOCTYPE html>
 <html lang="ru">
+<head>
 ${head}
-<body>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/dist/vbulletin_important.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/AlexP11223/ProgForumRuUserscripts/non-user-js/highlight/styles/programmersforum.css" />
 <style type="text/css">
@@ -163,6 +163,8 @@ ${head}
     img[src="images/icons/icon1.gif"]
     { display: none; }
 </style>
+</head>
+<body>
 <h2>${firstPage.categories.join(' - ')}</h2>
 <h1>${firstPage.title}</h1>
 ${postsHtmlWithImagesAndAttachments}
