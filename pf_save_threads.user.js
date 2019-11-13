@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.4.0
+// @version      1.4.1
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -76,7 +76,7 @@
                 try {
                     imgCache.set(imgUrl, await loadImageBase64(imgUrl));
                 } catch (e) {
-                    console.log(e);
+                    console.error(e);
                 }
             }
         }
@@ -117,7 +117,7 @@
 
                 link.href = getLocalAttachmentPath(attachment);
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         }
 
@@ -131,7 +131,11 @@
             cssCache = '';
             for (const url of ['/clientscript/vbulletin_important.css?v=3811', '/highlight/styles/programmersforum.css']) {
                 console.log(`Loading ${url}`);
-                cssCache += await $.get(url) + '\n';
+                try {
+                    cssCache += await $.get(url) + '\n';
+                } catch (e) {
+                    console.error(e);
+                }
             }
         }
         return cssCache;
