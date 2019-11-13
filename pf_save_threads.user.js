@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.6.0
+// @version      1.6.1
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -34,11 +34,13 @@
         const pollForm = htmlDoc.querySelector('form[action^="poll.php"]');
         const pollImg = htmlDoc.querySelector('img[src*="/polls/"]');
         const pollResults = pollImg ? pollImg.closest('table') : null;
+        const pollResultsLink = htmlDoc.querySelector('a[href^="poll.php?do=showresults"]');
 
         return {
             head: htmlDoc.head.innerHTML,
             content: posts.innerHTML,
             additionalContent: [pollForm, pollResults].map(el => el ? el.outerHTML : '').join('\n'),
+            pollResultsUrl: pollResultsLink ? pollResultsLink.href : null,
             title: htmlDoc.querySelector('.navbar strong').textContent.trim(),
             categories: Array.from(htmlDoc.querySelectorAll('.navbar a[href^=forumdisplay]')).map(el => el.textContent.trim()),
             pageCount: pageCountBar ? parseInt(pageCountBar.textContent.split(' ')[3]) : 1,
@@ -52,6 +54,14 @@
     function generateThreadPagesUrls(threadId, pageCount) {
         const firstPageUrl = threadUrl(threadId);
         return [firstPageUrl, ..._.range(2, pageCount + 1, 1).map(n => `${firstPageUrl}&page=${n}`)];
+    }
+
+    async function loadPollResults(url) {
+        console.log(`Loading ${url}`);
+        const htmlDoc = parseHtml(await $.get(url));
+
+        const pollImg = htmlDoc.querySelector('img[src*="/polls/"]');
+        return pollImg ? pollImg.closest('table').outerHTML : '';
     }
 
     function loadImageBase64(url) {
@@ -149,9 +159,18 @@
             pages.push(parseThread(await $.get(url)));
         }
 
+        let pollDetailedResults = '';
+        if (pages[0].pollResultsUrl) {
+            try {
+                pollDetailedResults = loadPollResults(pages[0].pollResultsUrl);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         const head = pages[0].head.replace('windows-1251', 'utf-8');
 
-        const postsHtml = `${pages[0].additionalContent}<div id="posts">${pages.map(p => p.content).join('')}</div>`;
+        const postsHtml = `${pages[0].additionalContent}${pollDetailedResults}<div id="posts">${pages.map(p => p.content).join('')}</div>`;
         const postsHtmlWithImages = await replaceRemoteImages(postsHtml);
         const [postsHtmlWithImagesAndAttachments, attachments] = await loadAttachments(postsHtmlWithImages);
 
