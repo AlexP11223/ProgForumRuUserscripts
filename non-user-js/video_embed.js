@@ -154,7 +154,7 @@ var videoembed = new function() {
                 return;
 
             // skip signature
-            if ($(link).parents('div').eq(0).is(':contains("__________________")'))
+            if ($(link).parents('.signature').length || $(link).parents('div').eq(0).is(':contains("__________________")'))
                 return;
 
             var url = $(link).attr('href');
