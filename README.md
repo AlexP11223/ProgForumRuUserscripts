@@ -109,7 +109,18 @@ Adds a function that exports the specified threads (with all attachments, avatar
 
 Usage (in the web browser console): `exportThreads(123, 456, ...)`
 
-You can also retrieve all thread IDs in the category like this: `loadThreadsList(36).then(ids => console.log(ids.join(', ')))`
+The result will be a ZIP archive with this structure:
+
+```
+- category (e.g. Web Dev)
+  - subcategory (e.g. PHP)
+    - attachments
+      - files.zip
+    - 123 Laravel vs Yii.html
+    - 456 Is there something like array_any .html
+```
+
+You can also retrieve all thread IDs in the category like this: `loadThreadsList(50).then(ids => console.log(ids.join(', ')))`
 
 ## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
 
