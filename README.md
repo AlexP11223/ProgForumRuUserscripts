@@ -101,6 +101,16 @@ Also it is possible to save the data automatically to IndexedDB every 20 minutes
 
 It was used to estimate the number of the unique visitors and compare with other counters.
 
+## [Export Threads](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_save_threads.user.js)
+
+![](https://i.imgur.com/jqUt0ku.png)
+
+Adds a function that exports the specified threads (with all attachments, avatars, smiles, poll results) to HTML files that can be opened locally/offline.
+
+Usage (in the web browser console): `exportThreads(123, 456, ...)`
+
+You can also retrieve all thread IDs in the category like this: `loadThreadsList(36).then(ids => console.log(ids.join(', ')))`
+
 ## [Hotkey](https://github.com/AlexP11223/ProgForumRuUserscripts/blob/master/pf_hotkey.user.js)
 
 Sends messages by `Ctrl + Enter`, works in all textareas (quick reply, edit, etc.).
