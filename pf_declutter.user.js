@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Hide logo, etc.
 // @namespace    programmersforum.ru
-// @version      1.5
+// @version      1.6
 // @description  hides the huge logo and other useless stuff
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -21,14 +21,16 @@
         document.head.appendChild(styleSheet);
     }
 
-    addStyle(`img[src="images/1070/misc/logo.gif"],
-                   #header_right_cell,
-                   div.page > div > b,
-                   div.page > div > b + br,
-                   div.page > div > b + br + br,
-                   div.page > div > center,
-                   div.page > div > center + br
-        { display: none; }`);
+    if (document.head) {
+        addStyle(`img[src="images/1070/misc/logo.gif"],
+                       #header_right_cell,
+                       div.page > div > b,
+                       div.page > div > b + br,
+                       div.page > div > b + br + br,
+                       div.page > div > center,
+                       div.page > div > center + br
+           { display: none; }`);
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
         $('img[src="images/1070/misc/logo.gif"]')
