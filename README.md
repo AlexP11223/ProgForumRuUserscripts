@@ -115,10 +115,13 @@ The result will be a ZIP archive with this structure:
 - category (e.g. Web Dev)
   - subcategory (e.g. PHP)
     - attachments
+      - document.docx
       - files.zip
     - 123 Laravel vs Yii.html
     - 456 Is there something like array_any .html
 ```
+
+Threads with multiple pages will be concatenated into single page.
 
 You can also retrieve all thread IDs in the category like this: `loadThreadsList(50).then(ids => console.log(ids.join(', ')))`
 
