@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ProgrammersForum Save Threads
 // @namespace    programmersforum.ru
-// @version      1.6.3
+// @version      1.7.3
 // @description  adds exportThreads function to export the specified threads, and loadThreadsList to get IDs of all threads in the specified category
 // @author       Alex P
 // @include      *programmersforum.ru/*
@@ -216,8 +216,17 @@ ${postsHtmlWithImagesAndAttachments}
 
     window.exportThreads = async function (...ids) {
         const zip = new JSZip();
-
         const ZIP_ROOT = 'programmersforum_export/';
+
+        let CURRENT_THREAD_ID;
+        if (ids.length === 0) {
+          CURRENT_THREAD_ID = +document
+            .querySelectorAll("#threadsearch_menu a")[1]
+            .href
+            .split("=")[1];
+
+          ids.push(CURRENT_THREAD_ID);
+        }
 
         for (const id of ids) {
             const thread = await loadThread(id);
