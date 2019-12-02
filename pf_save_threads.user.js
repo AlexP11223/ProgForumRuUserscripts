@@ -218,14 +218,12 @@ ${postsHtmlWithImagesAndAttachments}
         const zip = new JSZip();
         const ZIP_ROOT = 'programmersforum_export/';
 
-        let CURRENT_THREAD_ID;
         if (ids.length === 0) {
-          CURRENT_THREAD_ID = +document
-            .querySelectorAll("#threadsearch_menu a")[1]
-            .href
-            .split("=")[1];
-
-          ids.push(CURRENT_THREAD_ID);
+          const currentThreadId = +document
+              .querySelectorAll("#threadsearch_menu a")[1]
+              .href
+              .split("=")[1];
+            ids.push(currentThreadId);
         }
 
         for (const id of ids) {
