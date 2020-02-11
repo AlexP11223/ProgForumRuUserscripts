@@ -1,4 +1,4 @@
-UserScripts for a vBulettin 3.8 forum (https://programmersforum.ru). 
+UserScripts for a vBulettin 3.8 forum (https://programmersforum.ru in 2019, before the admin went completely mad and we moved to Discourse https://www.programmersforum.rocks :D). 
 The scripts were tested using TamperMonkey for Chrome and Firefox (also earlier GreaseMonkey but it became broken after Firefox 57 and we stopped using it).
 
 Some scripts (in [/non-user-js](/non-user-js)) were adapted to normal JS scripts that can be integrated into the forum by the forum owner.
